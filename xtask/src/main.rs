@@ -73,6 +73,7 @@ const LAYERS: &[(&str, u8)] = &[
     ("ui-egui", 5),
     ("automation", 5),
     ("filmcraft", 6),
+    ("iridium-film-shell", 6),
     ("cli", 6),
     ("web", 6),
 ];

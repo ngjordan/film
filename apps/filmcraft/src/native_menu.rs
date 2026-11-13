@@ -155,16 +155,14 @@ pub fn install(app: &FilmcraftApp, ctx: egui::Context) -> (Receiver<String>, Men
     if let Some(help) = bar.items().last().and_then(|i| i.as_submenu().cloned()) {
         help.set_as_help_menu_for_nsapp();
     }
-    Box::leak(Box::new(bar));
+    // The text-menu closure retains the bar. A host replaces this handler on app switches;
+    // competing receiver threads would steal events from the newly active app.
     let (tx, rx) = channel();
-    std::thread::spawn(move || {
-        while let Ok(ev) = MenuEvent::receiver().recv() {
-            if tx.send(ev.id().0.clone()).is_err() {
-                break;
-            }
+    MenuEvent::set_event_handler(Some(move |ev: MenuEvent| {
+        if tx.send(ev.id().0.clone()).is_ok() {
             ctx.request_repaint();
         }
-    });
+    }));
     let mut shown_language = app.ui.language;
     let update: MenuUpdater = Box::new(move |items: &[Item]| {
         let checked = |id: &str| items.iter().any(|it| it.id == id && it.checked == Some(true));

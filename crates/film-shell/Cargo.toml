@@ -1,0 +1,39 @@
+[package]
+name = "iridium-film-shell"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+rust-version.workspace = true
+publish = false
+description = "Film desktop shell for Workspace"
+
+[lints]
+workspace = true
+
+[dependencies]
+filmcraft-engine.workspace = true
+filmcraft-ui-egui.workspace = true
+filmcraft-platform.workspace = true
+egui.workspace = true
+eframe = { workspace = true, features = ["wgpu", "x11", "wayland"] }
+serde_json.workspace = true
+log.workspace = true
+rfd.workspace = true
+cpal = "0.16"
+arboard = "3"
+chrono = { workspace = true, features = ["clock"] }
+sys-locale = "0.3"
+open = "5"
+
+[dev-dependencies]
+tempfile = "3"
+glob = "0.3"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+zbus = "5.19"
+
+[target.'cfg(target_os = "macos")'.dependencies]
+muda = "0.21"
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSProcessInfo", "NSString", "NSArray"] }
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSApplication", "NSResponder", "NSWindow", "NSPanel", "NSColorPanel", "NSColor", "NSColorSpace"] }
+objc2 = "0.6"

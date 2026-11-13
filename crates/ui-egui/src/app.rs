@@ -203,7 +203,7 @@ impl FilmcraftApp {
 impl FilmcraftApp {
     /// Install the theme once, then keep fonts ready; a saved language without its system face
     /// falls back to English as before.
-    fn logic_theme(&mut self, ctx: &egui::Context) {
+    pub fn install_look(&mut self, ctx: &egui::Context) {
         if !self.styled {
             theme::install(ctx, &self.tokens);
             // theme::install replaces the fonts: add the system Japanese font back (or fall back to
@@ -321,7 +321,7 @@ impl FilmcraftApp {
         self.ui_clock = self.ui_clock.max(ctx.input(|i| i.time));
         // a native file dialog's answer first, so the panels draw what it chose (#260)
         self.poll_native_dialog(ctx);
-        self.logic_theme(ctx);
+        self.install_look(ctx);
         let now = self.logic_clock(ctx);
         self.logic_control(ctx);
         self.logic_background(ctx, now);
@@ -338,7 +338,7 @@ impl FilmcraftApp {
     /// draw panels under a panic guard, drain UI requests and check the IME editor only after
     /// this pass's commands ran. Screenshots are offered to `capture::issue`, which issues only
     /// on an accepted pass.
-    fn ui_inner(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
+    fn ui_inner(&mut self, ui: &mut egui::Ui) {
         if self.ui_clock_offset.is_none() {
             let egui_time = ui.ctx().input(|input| input.time);
             if egui_time.is_finite() {
@@ -357,7 +357,6 @@ impl FilmcraftApp {
             ui.ctx().request_repaint();
             return;
         }
-        frame.set_ui_language(Some(self.ui.language.bcp47()));
         let ctx = ui.ctx().clone();
         // A project/sequence replacement may have happened in the previous pass's control drain.
         // Drop the old edit and IME composition before shortcuts or the frame see them.
@@ -497,22 +496,14 @@ impl eframe::App for FilmcraftApp {
     /// Eframe's hidden logic callback: run the logic pass, sync the IME target context, then
     /// suspend reset state because a logic-only callback is never a UI pass.
     fn logic(&mut self, ctx: &egui::Context, _frame: &mut eframe::Frame) {
-        self.logic_inner(ctx);
-        self.finish_ime_reset_logic(ctx);
+        self.logic_for_host(ctx);
     }
 
     /// Cancel outstanding screenshots with one error reply each, end per-viewport IME reset
     /// state, shut the session down so its recovery journal is flushed or removed, and start an
     /// update that waits for the exit.
-    fn on_exit(&mut self) {
-        // Late screenshot callbacks now find a dropped slot and write nothing; clients get one error.
-        capture::cancel_all(self);
-        for viewport in self.ime_viewports.drain(..) {
-            self.ime_reset.end_viewport(viewport);
-        }
-        // Flush the recovery journal and stop the auto-save worker; a session with nothing unsaved
-        // removes its journal, one with unsaved changes keeps it for the next launch.
-        self.session.shutdown();
+    fn on_exit(&mut self, _gl: Option<&eframe::glow::Context>) {
+        self.save_state_for_host();
         // An update waiting for the exit starts its install helper now.
         crate::updates_ui::exiting(self);
     }
@@ -520,6 +511,34 @@ impl eframe::App for FilmcraftApp {
     /// Eframe's UI entry: begin this pass's IME reset state, suspend custom controls when no
     /// eligible editor owns input, draw `ui_inner`, then run end-of-pass IME reconciliation.
     fn ui(&mut self, ui: &mut egui::Ui, frame: &mut eframe::Frame) {
+        frame.set_ui_language(Some(self.ui.language.bcp47()));
+        self.ui_for_host(ui);
+    }
+}
+
+impl FilmcraftApp {
+    /// Background work with the standalone IME lifecycle, without an eframe Frame.
+    pub fn logic_for_host(&mut self, ctx: &egui::Context) {
+        self.logic_inner(ctx);
+        self.finish_ime_reset_logic(ctx);
+    }
+
+    /// Flush recovery and finish module-owned requests, without running a process updater.
+    pub fn save_state_for_host(&mut self) {
+        capture::cancel_all(self);
+        for viewport in self.ime_viewports.drain(..) {
+            self.ime_reset.end_viewport(viewport);
+        }
+        self.session.shutdown();
+    }
+
+    /// A user-confirmed discard is safe, just as for standalone quit.
+    pub fn can_close_for_host(&self) -> bool {
+        self.quit_confirmed || !self.session.is_dirty()
+    }
+
+    /// Draw inside a host-owned UI, with the same IME lifecycle as standalone.
+    pub fn ui_for_host(&mut self, ui: &mut egui::Ui) {
         let ctx = ui.ctx().clone();
         self.ime_reset.begin_pass(&ctx);
         self.ime_drawn_editor = None;
@@ -528,7 +547,7 @@ impl eframe::App for FilmcraftApp {
         if !self.fonts_ready || self.ui.gfx_edit.is_none() || self.ime_modal_blocks_input() || !focused || another_field {
             self.suspended_ime_controls(&ctx);
         }
-        self.ui_inner(ui, frame);
+        self.ui_inner(ui);
         self.finish_ime_reset_ui(&ctx);
     }
 }

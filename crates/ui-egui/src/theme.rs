@@ -418,6 +418,12 @@ pub fn font_families() -> Vec<FontFamily> {
 /// craft-fonts, Arabic and Hebrew fallbacks (craft-fonts or installed faces, `crate::rtl`) and
 /// egui visuals. Document names keep their glyphs in every interface language.
 pub fn install(ctx: &egui::Context, t: &Tokens) {
+    ctx.set_fonts(font_definitions());
+    apply_visuals(ctx, t);
+}
+
+/// Build the complete look without reading a context before its first pass.
+pub fn font_definitions() -> FontDefinitions {
     let mut fonts = FontDefinitions::default();
     fonts.font_data.insert("inter".into(), Arc::new(FontData::from_static(filmcraft_text::fonts::INTER_REGULAR)));
     fonts.font_data.insert("inter-medium".into(), Arc::new(FontData::from_static(filmcraft_text::fonts::INTER_MEDIUM)));
@@ -432,8 +438,15 @@ pub fn install(ctx: &egui::Context, t: &Tokens) {
     add_craft_fonts(&mut fonts);
     crate::cjk::install(&mut fonts);
     crate::rtl::install(&mut fonts);
-    ctx.set_fonts(fonts);
-    apply_visuals(ctx, t);
+    if !crate::i18n::craft_japanese_font()
+        && let Some(face) = crate::i18n::system_japanese_font()
+    {
+        fonts.font_data.insert("system-japanese".into(), face);
+        for family in font_families() {
+            fonts.families.entry(family).or_default().push("system-japanese".into());
+        }
+    }
+    fonts
 }
 
 /// Name of the egui font for a craft-fonts entry.
