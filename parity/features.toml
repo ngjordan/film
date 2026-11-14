@@ -1,743 +1,878 @@
-# Film catalogue: concrete features of Adobe Premiere Pro 2026 (26.5.2), one row each.
-# Built from docs/target-app-parity.md and the deep checklists (codec-, file-format-,
-# hardware-, ui-parity.md) plus the effects/transitions reference tests, because no
-# Premiere menu dump (plan/premiere/menus.json) is committed.
+# Film feature catalogue: one row per Adobe Premiere Pro feature.
+# Converted from the array-of-tables form by scripts/convert_parity_format.py.
 
-[feature."three-point-editing"]
-title = "Three-point editing (insert / overwrite from Source Monitor)"
+[feature."insert-overwrite-edit"]
+title = "Insert and overwrite (3-point) editing from the Source monitor"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["source.insert", "source.overwrite"]
 reference = "yes"
-commands = ["source.insert", "source.overwrite", "source.open"]
 
-[feature."razor-split-clip"]
-title = "Razor / split clip at playhead"
+[feature."ripple-roll-slip-slide"]
+title = "Ripple, rolling, slip and slide trims"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["timeline.trim", "timeline.roll", "timeline.slip", "timeline.slide"]
 reference = "yes"
-commands = ["timeline.razor", "sequence.addEdit", "sequence.addEditAllTracks"]
 
-[feature."ripple-delete"]
-title = "Ripple delete (clip and its gap in one action)"
+[feature."razor-tool"]
+title = "Razor / Add Edit splitting"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["timeline.razor", "sequence.addEdit"]
 reference = "yes"
-commands = ["edit.rippleDelete", "edit.rippleDeleteHead"]
+
+[feature."rate-stretch-speed"]
+title = "Rate Stretch and clip Speed/Duration"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["timeline.rateStretch", "clip.speedDuration"]
+reference = "yes"
+
+[feature."time-remapping"]
+title = "Time remapping (variable speed keyframes)"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["effects.setParam"]
+reference = "yes"
+
+[feature."trim-monitor-dynamic"]
+title = "Trim Monitor and dynamic trimming"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["trim.monitor", "trim.shuttle", "trim.playAround"]
+reference = "yes"
+
+[feature."jkl-shuttle"]
+title = "J-K-L shuttle playback with variable speed"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["play.shuttle"]
+reference = "yes"
+
+[feature."nested-sequence"]
+title = "Nested sequences (Nest, Make Subsequence, Reveal Nested)"
+tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.nest", "sequence.makeSubsequence", "sequence.revealNested"]
+reference = "yes"
+
+[feature."adjustment-layer"]
+title = "Adjustment layers"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["file.newAdjustmentLayer"]
+reference = "yes"
 
 [feature."gap-ripple-delete"]
-title = "Backspace / ripple delete of timeline gaps"
+title = "Delete or ripple-close timeline gaps"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["edit.clear", "edit.rippleDelete", "timeline.selectGap", "sequence.closeGap"]
 reference = "yes"
-commands = ["timeline.selectGap", "sequence.closeGap"]
 
-[feature."trim-ripple-edit"]
-title = "Trim ripple edit"
-tier = "P0"
-reference = "yes"
-commands = ["trim.edit", "trim.toggleType"]
-
-[feature."trim-rolling-edit"]
-title = "Trim rolling edit"
-tier = "P0"
-reference = "yes"
-commands = ["timeline.roll"]
-
-[feature."trim-slip-edit"]
-title = "Slip edit"
-tier = "P0"
-reference = "yes"
-commands = ["timeline.slip"]
-
-[feature."trim-slide-edit"]
-title = "Slide edit"
-tier = "P0"
-reference = "yes"
-commands = ["timeline.slide"]
-
-[feature."speed-and-rate-stretch"]
-title = "Clip speed: Speed/Duration and rate stretch"
-tier = "P0"
-reference = "yes"
-commands = ["clip.speedDuration", "timeline.rateStretch"]
-
-[feature."trim-monitor-and-dynamic"]
-title = "Trim Monitor, dynamic trim (JKL shuttle), nudge/extend to playhead"
+[feature."marquee-deselect"]
+title = "Marquee selection in Timeline and Project panels; deselect on empty space"
 tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["edit.deselectAll"]
 reference = "yes"
-commands = ["trim.monitor", "trim.shuttle", "trim.shuttleStop", "trim.nudge", "trim.extendToPlayhead", "trim.ripplePrevious", "trim.rippleNext"]
+
+[feature."track-targeting"]
+title = "Track targeting and source patching"
+tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["timeline.setTargeting"]
+reference = "yes"
+
+[feature."match-frame"]
+title = "Match Frame and Reverse Match Frame"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["sequence.matchFrame", "sequence.reverseMatchFrame"]
+reference = "yes"
+
+[feature."markers"]
+title = "Sequence and clip markers (add, edit, navigate, filter, export)"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["markers.add", "markers.edit", "markers.goNext", "markers.exportCsv"]
+reference = "yes"
+
+[feature."in-out-points"]
+title = "In/Out points, Mark Clip/Selection, Go to In/Out"
+tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["markers.markIn", "markers.markOut", "markers.markClip"]
+reference = "yes"
 
 [feature."lift-extract"]
-title = "Lift / Extract"
+title = "Lift and Extract across targeted tracks"
 tier = "P1"
-reference = "yes"
+area = "Editing, Timeline, and Trimming"
 commands = ["sequence.lift", "sequence.extract"]
-
-[feature."undo-history"]
-title = "Undo / redo and History panel"
-tier = "P0"
 reference = "yes"
-commands = ["edit.undo", "edit.redo", "history.list", "history.clear"]
 
-[feature."edit-clipboard"]
-title = "Cut / copy / paste, paste insert, paste media"
+[feature."ripple-delete-clip"]
+title = "Delete, Ripple Delete, ripple delete head/tail frame"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["edit.clear", "edit.rippleDelete", "edit.rippleDeleteHead"]
 reference = "yes"
-commands = ["edit.cut", "edit.copy", "edit.paste", "edit.pasteInsert", "edit.pasteMedia"]
 
-[feature."nested-sequences"]
-title = "Nested sequences"
+[feature."copy-paste"]
+title = "Cut/copy/paste, Paste Insert, Paste Attributes"
 tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["edit.cut", "edit.copy", "edit.paste", "edit.pasteInsert", "edit.pasteAttributes"]
 reference = "yes"
-commands = ["clip.nest", "sequence.makeSubsequence", "sequence.nestSequences"]
+
+[feature."groups-links"]
+title = "Clip grouping and A/V linking"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.group", "clip.ungroup", "clip.link"]
+reference = "yes"
+
+[feature."subclips"]
+title = "Subclips and Edit Subclip"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.makeSubclip", "clip.editSubclip"]
+reference = "yes"
+
+[feature."frame-hold"]
+title = "Frame Hold and frame hold segments"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.frameHold", "clip.insertFrameHoldSegment"]
+reference = "yes"
+
+[feature."field-options"]
+title = "Field Options and time interpolation (frame sampling/blending/optical flow)"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.fieldOptions", "clip.timeInterpolation.opticalFlow"]
+reference = "yes"
 
 [feature."multicam-editing"]
-title = "Multicam editing with audio sync"
+title = "Multicamera sequences: audio-sync creation, live switching, flatten"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.createMulticam", "clip.synchronize", "multicam.cut", "multicam.switchAngle", "clip.multicamFlatten"]
+reference = "yes"
+
+[feature."keyboard-editor"]
+title = "Keyboard shortcuts editor with a Premiere-compatible preset"
 tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["shortcuts.set", "shortcuts.loadPreset", "shortcuts.import"]
 reference = "yes"
-commands = ["clip.createMulticam", "clip.synchronize", "multicam.switchAngle", "multicam.cut", "clip.multicamFlatten"]
 
-[feature."clip-timing"]
-title = "Frame hold, time interpolation (sampling / blending / optical flow), time remapping"
+[feature."undo-history"]
+title = "Unlimited undo/redo and History panel"
+tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["edit.undo", "edit.redo", "history.list"]
+reference = "yes"
+
+[feature."edit-points-nudge"]
+title = "Select edit points, trim nudge, extend/ripple to playhead (Q/W/E)"
 tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["trim.selectEditPoint", "trim.nudge", "trim.ripplePrevious", "trim.extendToPlayhead"]
 reference = "yes"
-commands = ["clip.frameHold", "clip.insertFrameHoldSegment", "clip.setTimeInterpolation"]
 
-[feature."markers-and-in-out"]
-title = "Markers and In/Out points (add, edit, navigate, CSV export)"
-tier = "P0"
-reference = "yes"
-commands = ["markers.add", "markers.edit", "markers.exportCsv", "markers.markIn", "markers.markOut"]
-
-[feature."timeline-snapping"]
-title = "Timeline snapping"
-tier = "P0"
-reference = "yes"
-commands = ["sequence.snap"]
-
-[feature."clip-link-groups"]
-title = "Linked audio/video editing and clip groups"
-tier = "P0"
-reference = "yes"
-commands = ["clip.link", "sequence.linkedSelection", "clip.group", "clip.ungroup"]
-
-[feature."track-management"]
-title = "Track management (targeting, lock/hide, add, delete)"
-tier = "P0"
-reference = "yes"
-commands = ["timeline.setTargeting", "timeline.setTrack", "sequence.addTracks", "sequence.deleteTracks"]
-
-[feature."new-tracks-by-drag"]
-title = "New tracks created by dragging media to the empty area"
+[feature."drop-new-tracks"]
+title = "Drop media on empty track area to create new tracks"
 tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["timeline.place", "timeline.move"]
 reference = "yes"
 
-[feature."work-area-and-match-frame"]
-title = "Work area bar and match frame"
-tier = "P2"
+[feature."sequence-settings"]
+title = "Sequence Settings (frame size, rate, timecode, working colour space)"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["sequence.settings"]
 reference = "yes"
-commands = ["sequence.workAreaBar", "sequence.matchFrame", "sequence.reverseMatchFrame"]
 
-[feature."clip-utilities"]
-title = "Clip utilities: enable, labels, rename, interpret footage, subclips, replace, consolidate, find"
+[feature."render-previews"]
+title = "Render In to Out / Effects In to Out / Render Audio"
 tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["sequence.renderInToOut", "sequence.renderEffectsInToOut", "sequence.renderAudio"]
 reference = "yes"
-commands = ["clip.enable", "edit.label", "clip.rename", "clip.interpretFootage", "clip.makeSubclip", "clip.replaceFromBin", "edit.consolidateDuplicates", "edit.find"]
+
+[feature."source-monitor"]
+title = "Source monitor with insert/overwrite and range selection"
+tier = "P0"
+area = "Editing, Timeline, and Trimming"
+commands = ["source.open", "source.insert", "source.overwrite"]
+reference = "yes"
+
+[feature."fit-fill-frame"]
+title = "Fit to Frame and Fill Frame"
+tier = "P1"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.fitFrame", "clip.fillFrame"]
+reference = "yes"
+
+[feature."audio-channel-config"]
+title = "Breakout to Mono, Modify Audio Channels"
+tier = "P2"
+area = "Editing, Timeline, and Trimming"
+commands = ["clip.breakoutToMono", "clip.modifyAudioChannels"]
+reference = "yes"
 
 [feature."video-effects-catalogue"]
-title = "Video effects catalogue (93 + Legacy/Obsolete)"
-tier = "P0"
+title = "Video effects catalogue: 93 current + 15 Legacy folders"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.apply"]
 reference = "yes"
-commands = ["effects.apply", "effects.list"]
 
 [feature."audio-effects-catalogue"]
-title = "Audio effects catalogue (53, foldered)"
-tier = "P0"
-reference = "yes"
+title = "Audio effects catalogue: 53 effects in 8 folders"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
 commands = ["effects.apply"]
-
-[feature."transitions-catalogues"]
-title = "Video transitions (84 + 21 Legacy) and audio transitions (3)"
-tier = "P0"
 reference = "yes"
-commands = ["sequence.applyVideoTransition", "sequence.applyAudioTransition"]
+
+[feature."video-transitions-catalogue"]
+title = "Video transitions: 84 current + 21 Legacy + Obsolete folders"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
+commands = ["sequence.applyVideoTransition"]
+reference = "yes"
+
+[feature."audio-transitions"]
+title = "Audio transitions: Constant Power, Constant Gain, Exponential Fade"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
+commands = ["sequence.applyAudioTransition"]
+reference = "yes"
 
 [feature."effect-keyframes"]
-title = "Effect keyframes (add, move, delete, interpolation)"
-tier = "P0"
+title = "Effect parameter keyframes with animation toggle"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.setParam", "effects.toggleAnimation", "effects.addKeyframe"]
 reference = "yes"
-commands = ["effects.addKeyframe", "effects.moveKeyframe", "effects.deleteKeyframe", "effects.setInterpolation"]
+
+[feature."keyframe-interpolation"]
+title = "Keyframe interpolation modes and keyframe moves"
+tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.setInterpolation", "effects.moveKeyframe", "effects.deleteKeyframe"]
+reference = "yes"
 
 [feature."effect-controls-panel"]
-title = "Effect Controls panel (rows, keyframes, graphs, eyedropper)"
-tier = "P0"
+title = "Effect Controls panel: keyframe navigation, value/velocity graphs, eyedropper"
+tier = "P1"
+area = "Effects, Transitions, and Keyframes"
+commands = []
 reference = "yes"
-
-[feature."transition-settings"]
-title = "Transition settings and on-timeline transition editing"
-tier = "P0"
-reference = "yes"
-commands = ["sequence.setTransition", "sequence.removeTransition"]
-
-[feature."effect-presets-prfpset"]
-title = "Premiere .prfpset effect preset import"
-tier = "P2"
-reference = "yes"
-commands = ["presets.import", "presets.apply", "presets.save"]
 
 [feature."warp-stabilizer"]
 title = "Warp Stabilizer"
-tier = "P1"
+tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.apply"]
 reference = "yes"
 
 [feature."morph-cut"]
-title = "Morph Cut"
+title = "Morph Cut transition"
 tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["sequence.applyVideoTransition"]
 reference = "yes"
 
 [feature."auto-reframe"]
 title = "Auto Reframe"
 tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.apply"]
 reference = "yes"
 
 [feature."object-mask"]
-title = "Object Mask (AI, Premiere 26.0)"
+title = "Object Mask (AI masking, Premiere 26.0)"
 tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["masks.add"]
 reference = "yes"
 
-[feature."mask-draw-track"]
-title = "Draw / track masks (bezier, vertices)"
-tier = "P1"
-reference = "yes"
-commands = ["masks.add", "masks.track", "masks.addVertex"]
-
-[feature."gpu-accelerated-effects"]
-title = "GPU-accelerated effects (~82 of ~92 in Premiere)"
-tier = "P1"
-reference = "yes"
-
-[feature."adjustment-layers"]
-title = "Adjustment layers"
-tier = "P1"
-reference = "yes"
-commands = ["file.newAdjustmentLayer"]
-
-[feature."render-in-to-out"]
-title = "Render In/Out, Effects In/Out, Selection, Audio"
+[feature."mask-tools"]
+title = "Bezier masks with tracking, feather and rounded corners"
 tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["masks.add", "masks.track", "masks.roundCorners"]
 reference = "yes"
-commands = ["sequence.renderInToOut", "sequence.renderEffectsInToOut", "sequence.renderSelection", "sequence.renderAudio"]
 
-[feature."render-and-replace"]
-title = "Render and Replace / Restore Unrendered"
+[feature."gpu-effects"]
+title = "GPU-accelerated effects"
+tier = "P3"
+area = "Effects, Transitions, and Keyframes"
+commands = ["effects.apply"]
+reference = "yes"
+
+[feature."effect-presets"]
+title = "Effect presets: .prfpset import and the shipped preset library"
 tier = "P2"
+area = "Effects, Transitions, and Keyframes"
+commands = ["presets.import", "presets.apply"]
 reference = "yes"
 
-[feature."audio-mixer"]
-title = "Audio Track Mixer (strips, inserts, sends, submixes)"
+[feature."h264-decode"]
+title = "H.264 decode (Baseline/Main/High, 8-bit 4:2:0)"
 tier = "P0"
+area = "Media, Import, and Codecs"
+commands = []
 reference = "yes"
-commands = ["mixer.setStrip", "mixer.addInsert", "mixer.addSend", "mixer.addSubmix"]
 
-[feature."audio-automation"]
-title = "Audio keyframe automation (clip + track, Off/Read/Latch/Touch/Write)"
-tier = "P0"
-reference = "yes"
-commands = ["mixer.setKeyframe", "mixer.writeAutomation", "mixer.touch", "clipMixer.set"]
-
-[feature."essential-sound-and-ducking"]
-title = "Essential Sound (types, presets, auto-match) and auto-ducking"
+[feature."h264-high10-422-decode"]
+title = "H.264 High 10 / 4:2:2 10-bit camera media decode"
 tier = "P1"
+area = "Media, Import, and Codecs"
+commands = []
 reference = "yes"
-commands = ["essentialSound.setType", "essentialSound.applyPreset", "essentialSound.autoMatch", "essentialSound.generateDucking"]
 
-[feature."remix-audio"]
-title = "Remix (music retiming)"
+[feature."hevc-decode"]
+title = "HEVC decode (Main, Main 10, 8/10/12-bit)"
+tier = "P0"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."hevc-422-decode"]
+title = "HEVC 4:2:2 10-bit decode"
 tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
 reference = "yes"
-commands = ["clip.remix", "clip.remix.properties"]
 
-[feature."voice-over-record"]
+[feature."prores-decode"]
+title = "ProRes decode (all six profiles, alpha, 4:4:4)"
+tier = "P1"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."dnx-decode"]
+title = "DNxHD/DNxHR decode"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."av1-decode"]
+title = "AV1 decode"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."vp9-decode"]
+title = "VP9 decode (profiles 0-3, 8/10/12-bit)"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."mpeg2-decode"]
+title = "MPEG-1/2 decode incl. 4:2:2 IMX/XDCAM"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."mjpeg-decode"]
+title = "Motion JPEG decode and encode"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."camera-raw"]
+title = "Camera RAW: RED R3D, ARRIRAW, BRAW, Sony/Canon RAW, ProRes RAW"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."dng-decode"]
+title = "CinemaDNG / DNG decode"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."wmv-dv-mpeg4p2"]
+title = "WMV/ASF, DV/DVCPRO, FLV, MPEG-4 Part 2 import"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."jpeg2000-xs"]
+title = "JPEG 2000 and JPEG XS decode"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."uncompressed-video"]
+title = "Uncompressed / v210 / RGB video"
+tier = "P3"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."stills-basic"]
+title = "Stills: PNG, JPEG, TIFF, BMP, GIF, WebP with EXIF orientation"
+tier = "P0"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."exr-dpx-hdr"]
+title = "OpenEXR, DPX, Targa, Radiance HDR stills and sequences"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."psd-import"]
+title = "PSD flattened composite import"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."heif-import"]
+title = "HEIF/HEIC import"
+tier = "P3"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."image-sequence"]
+title = "Image sequence import (numbered frames as one clip)"
+tier = "P1"
+area = "Media, Import, and Codecs"
+commands = ["file.importImageSequence"]
+reference = "yes"
+
+[feature."audio-decode"]
+title = "Audio decode: PCM, AAC, MP3/MP2, FLAC/ALAC/Vorbis, Opus, AC-3/E-AC-3"
+tier = "P0"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."hw-decode"]
+title = "Hardware decode: VideoToolbox, Media Foundation, VA-API, NVDEC"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."multi-stream-audio"]
+title = "Multi-stream container audio (multiple audio tracks per file)"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."media-browser"]
+title = "Media Browser: navigate, favourites, probe, import"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = ["mediaBrowser.list", "mediaBrowser.probe", "mediaBrowser.import"]
+reference = "yes"
+
+[feature."camera-folders"]
+title = "Camera folder structures: XDCAM, P2, AVCHD, Canon XF, RED"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."proxies-ingest"]
+title = "Proxies and ingest (create, attach, toggle, transcode)"
+tier = "P1"
+area = "Media, Import, and Codecs"
+commands = ["media.createProxies", "media.attachProxies", "media.toggleProxies"]
+reference = "yes"
+
+[feature."relink"]
+title = "Link Media: find missing, relink, replace footage"
+tier = "P1"
+area = "Media, Import, and Codecs"
+commands = ["media.findMissing", "media.linkMedia", "media.relink"]
+reference = "yes"
+
+[feature."camera-metadata"]
+title = "Camera metadata (XDCAM/P2 sidecars, Sony start timecode)"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = ["metadata.get"]
+reference = "yes"
+
+[feature."media-cache"]
+title = "Media cache management"
+tier = "P2"
+area = "Media, Import, and Codecs"
+commands = ["mediaCache.info", "mediaCache.clean"]
+reference = "yes"
+
+[feature."adobe-stock-cloud"]
+title = "Adobe Stock / cloud media search"
+tier = "NA"
+area = "Media, Import, and Codecs"
+commands = []
+reference = "yes"
+
+[feature."mixer"]
+title = "Track Mixer and Clip Mixer with automation modes and Audio Gain"
+tier = "P1"
+area = "Audio"
+commands = ["mixer.setStrip", "mixer.setValue", "clipMixer.set", "clip.audioGain"]
+reference = "yes"
+
+[feature."audio-keyframes"]
+title = "Volume/pan keyframes on clips and tracks"
+tier = "P1"
+area = "Audio"
+commands = ["mixer.setValue", "effects.setParam"]
+reference = "yes"
+
+[feature."essential-sound"]
+title = "Essential Sound: types, repair, EQ, reverb, presets, loudness match, ducking"
+tier = "P1"
+area = "Audio"
+commands = ["essentialSound.setType", "essentialSound.set", "essentialSound.autoMatch", "essentialSound.generateDucking"]
+reference = "yes"
+
+[feature."remix"]
+title = "Remix (retime music to a target duration)"
+tier = "P2"
+area = "Audio"
+commands = ["clip.remix.enable", "clip.remix.properties"]
+reference = "yes"
+
+[feature."voiceover"]
 title = "Voice-over record (punch-in)"
-tier = "P1"
+tier = "P2"
+area = "Audio"
+commands = ["audio.voiceover.start", "audio.voiceover.settings"]
 reference = "yes"
-commands = ["audio.voiceover.start", "audio.voiceover.stop", "audio.voiceover.sync"]
 
 [feature."enhance-speech"]
-title = "Enhance Speech"
+title = "Enhance Speech (voice repair)"
+tier = "P2"
+area = "Audio"
+commands = ["essentialSound.set"]
+reference = "yes"
+
+[feature."workspaces-docking"]
+title = "Workspaces and panel docking"
+tier = "P2"
+area = "Panels and UI Fidelity"
+commands = []
+reference = "yes"
+
+[feature."project-panel-views"]
+title = "Project panel List/Icon/Freeform views, hover scrub, view presets, scrubbable values"
 tier = "P1"
+area = "Panels and UI Fidelity"
+commands = ["project.view.get", "project.freeform.layout", "project.items"]
 reference = "yes"
 
-[feature."clip-audio-controls"]
-title = "Clip audio gain, peak amplitude, channel mapping, breakout to mono"
-tier = "P0"
+[feature."program-monitor-handles"]
+title = "Program monitor: on-screen transform handles, safe margins, guides, rulers, transparency grid"
+tier = "P1"
+area = "Panels and UI Fidelity"
+commands = ["effects.setParam"]
 reference = "yes"
-commands = ["clip.audioGain", "clip.audioPeak", "clip.audioChannels", "clip.breakoutToMono"]
 
-[feature."surround-51"]
-title = "5.1 surround audio"
+[feature."multi-monitor"]
+title = "Second-display full-screen playback / floating monitor windows"
+tier = "P3"
+area = "Panels and UI Fidelity"
+commands = []
+reference = "yes"
+
+[feature."filmstrip"]
+title = "Continuous filmstrip clip thumbnails"
+tier = "P3"
+area = "Panels and UI Fidelity"
+commands = []
+reference = "yes"
+
+[feature."track-rename"]
+title = "Track renaming in the timeline"
+tier = "P3"
+area = "Panels and UI Fidelity"
+commands = ["timeline.setTrack"]
+reference = "yes"
+
+[feature."appearance-accessibility"]
+title = "Appearance modes, screen-reader accessibility, per-panel context menus"
 tier = "P2"
+area = "Panels and UI Fidelity"
+commands = ["appearance.get"]
 reference = "yes"
 
-[feature."audio-missing-features"]
-title = "Auto-Tag Audio Types; Audio Clip / Track Effect Editor panels"
-tier = "P2"
+[feature."color-grading"]
+title = "Color Grading: basic, creative, curves, wheels, HSL secondary, vignette"
+tier = "P1"
+area = "Colour"
+commands = ["lumetri.setSection", "effects.setParam"]
 reference = "yes"
 
-[feature."color-grading-and-looks"]
-title = "Color Grading (wheels, curves, HSL secondary, vignette) and Looks"
-tier = "P0"
-reference = "yes"
-commands = ["lumetri.setSection", "lumetri.setLook", "lumetri.applyPreset", "lumetri.applyMatch"]
-
-[feature."color-scopes"]
-title = "Video scopes (waveform, vectorscope, histogram)"
-tier = "P0"
-reference = "yes"
+[feature."scopes"]
+title = "Video scopes: waveform, parade, histogram, vectorscopes"
+tier = "P1"
+area = "Colour"
 commands = ["scopes.read"]
-
-[feature."lut-support"]
-title = "LUT support (.cube, .3dl; 1D/3D/shaper)"
-tier = "P1"
 reference = "yes"
-commands = ["lut.import", "lut.list", "lut.remove"]
 
-[feature."color-management-hdr"]
-title = "Colour management and HDR export"
+[feature."luts"]
+title = "LUTs: .cube / .3dl import, input LUT, creative looks"
 tier = "P1"
+area = "Colour"
+commands = ["lut.import", "lumetri.setInputLut", "lumetri.setLook"]
 reference = "yes"
-commands = ["sequence.colorSettings"]
 
-[feature."gpu-color-grading"]
-title = "Color grading wheels / curves / HSL on the GPU"
+[feature."color-management"]
+title = "Colour management: Rec.709 / 2100 PQ / HLG working spaces, tone mapping, HDR output"
 tier = "P2"
+area = "Colour"
+commands = ["sequence.colorSettings"]
 reference = "yes"
 
 [feature."text-titles"]
-title = "Text and titles engine (shaping, bidi, char styles)"
+title = "Text tool: titles with shaping, complex scripts and bidi"
 tier = "P0"
+area = "Graphics, Titles, and Captions"
+commands = ["graphics.newText", "graphics.setText"]
 reference = "yes"
-commands = ["graphics.newText", "graphics.setCharStyle"]
 
-[feature."shapes-and-arrange"]
-title = "Shapes (rectangle, ellipse, polygon), gradients, align/distribute/arrange"
+[feature."shapes"]
+title = "Shape layers: rectangle, ellipse, polygon, alignment, gradients"
 tier = "P1"
+area = "Graphics, Titles, and Captions"
+commands = ["graphics.newRectangle", "graphics.newEllipse", "graphics.newPolygon"]
 reference = "yes"
-commands = ["graphics.newRectangle", "graphics.newEllipse", "graphics.newPolygon", "graphics.arrangeLayer"]
 
 [feature."rolls-crawls"]
-title = "Rolling and crawling titles"
-tier = "P1"
-reference = "yes"
-commands = ["graphics.setRoll"]
-
-[feature."motion-graphics-templates"]
-title = "Motion Graphics templates (.mogrt)"
+title = "Title rolls and crawls with preroll/postroll/ease"
 tier = "P2"
+area = "Graphics, Titles, and Captions"
+commands = ["graphics.setRoll"]
 reference = "yes"
-commands = ["graphics.template.apply", "file.exportGraphicsTemplate"]
+
+[feature."graphic-templates"]
+title = "Motion Graphics templates and responsive design"
+tier = "P2"
+area = "Graphics, Titles, and Captions"
+commands = ["graphics.template.apply", "graphics.template.install"]
+reference = "yes"
+
+[feature."caption-formats"]
+title = "Captions: SRT, WebVTT, SCC, MCC, EBU STL, TTML/IMSC1, DFXP read/write"
+tier = "P1"
+area = "Graphics, Titles, and Captions"
+commands = ["captions.import", "captions.export"]
+reference = "yes"
+
+[feature."speech-to-text"]
+title = "Speech-to-text transcription and text-based editing"
+tier = "P2"
+area = "Graphics, Titles, and Captions"
+commands = ["transcript.generate", "transcript.lift", "transcript.removePauses"]
+reference = "yes"
+
+[feature."export-h264"]
+title = "H.264 export (own encoder: profiles, CBR/VBR/2-pass/CRF)"
+tier = "P0"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-hevc"]
+title = "HEVC export (software + hardware encoders)"
+tier = "P1"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-prores-dnxhr"]
+title = "ProRes and DNxHR export"
+tier = "P1"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-mxf"]
+title = "MXF OP1a / OP-Atom export (DNxHR, ProRes, H.264, uncompressed)"
+tier = "P2"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-image-sequences"]
+title = "Image sequence and GIF export (PNG, TIFF, BMP, JPEG, Targa, DPX, EXR, GIF)"
+tier = "P2"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-audio"]
+title = "Audio export: WAV, AIFF, AAC, MP3, FLAC"
+tier = "P1"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."export-presets-queue"]
+title = "Export presets, export queue and Quick Export"
+tier = "P1"
+area = "Export and Delivery"
+commands = ["export.presets.list", "export.queue.add", "export.quick"]
+reference = "yes"
+
+[feature."broadcast-delivery"]
+title = "Delivery targets: AV1, MPEG-2/DVD/Blu-ray, DCP, XDCAM HD/IMX, AS-10/AS-11, interlaced"
+tier = "P2"
+area = "Export and Delivery"
+commands = ["file.exportMedia"]
+reference = "yes"
+
+[feature."fcproj"]
+title = "Native project format: atomic saves, migrations, auto-save, recovery"
+tier = "P0"
+area = "Project Files and Interchange"
+commands = ["file.save", "file.open", "file.recover", "file.autoSaveNow"]
+reference = "yes"
+
+[feature."prproj-import"]
+title = "Open Premiere .prproj projects"
+tier = "P0"
+area = "Project Files and Interchange"
+commands = []
+reference = "yes"
+
+[feature."fcp7-xml"]
+title = "FCP7 XML (xmeml) import and export"
+tier = "P1"
+area = "Project Files and Interchange"
+commands = ["file.import", "file.exportFcp7Xml"]
+reference = "yes"
+
+[feature."fcpxml"]
+title = "FCPXML import and export"
+tier = "P2"
+area = "Project Files and Interchange"
+commands = ["file.exportFcpxml"]
+reference = "yes"
+
+[feature."aaf-omf"]
+title = "AAF and OMF interchange"
+tier = "P2"
+area = "Project Files and Interchange"
+commands = ["file.importAaf", "file.exportAaf", "file.exportOmf"]
+reference = "yes"
+
+[feature."edl-otio"]
+title = "EDL (CMX 3600) and OpenTimelineIO interchange"
+tier = "P2"
+area = "Project Files and Interchange"
+commands = ["file.exportEdl", "file.exportOtio"]
+reference = "yes"
+
+[feature."project-archives"]
+title = "Project archives and selection export"
+tier = "P3"
+area = "Project Files and Interchange"
+commands = ["file.exportSelectionProject", "file.archiveRestore"]
+reference = "yes"
+
+[feature."settings"]
+title = "Settings: 16 categories (General, Media, Auto Save, Audio, Labels…)"
+tier = "P1"
+area = "Preferences and Project Management"
+commands = ["prefs.get", "prefs.set", "app.settings.get"]
+reference = "yes"
+
+[feature."project-manager"]
+title = "Project Manager (collect / consolidate, exclude unused, transcode)"
+tier = "P2"
+area = "Preferences and Project Management"
+commands = ["file.projectManager"]
+reference = "yes"
+
+[feature."auto-save-recovery"]
+title = "Auto-save, journal and crash recovery"
+tier = "P1"
+area = "Preferences and Project Management"
+commands = ["file.autoSaveNow", "file.recover", "file.recoveryList"]
+reference = "yes"
+
+[feature."plugins-external-hw"]
+title = "Plug-in hosting and external hardware: VST3, Audio Units, OpenFX, UXP, DeckLink, AJA, EUCON"
+tier = "P2"
+area = "Preferences and Project Management"
+commands = []
+reference = "yes"
+
+[feature."generative-ai"]
+title = "Generative Extend and media-intelligence search"
+tier = "P2"
+area = "Preferences and Project Management"
+commands = []
+reference = "yes"
+
+[feature."adobe-cloud"]
+title = "Team Projects, Productions and Adobe cloud collaboration"
+tier = "NA"
+area = "Preferences and Project Management"
+commands = []
+reference = "yes"
 
 [feature."caption-tracks"]
 title = "Caption tracks (add, split, merge, trim, style)"
 tier = "P0"
 reference = "yes"
 commands = ["captions.newTrack", "captions.add", "captions.split", "captions.setStyle"]
-
-[feature."caption-formats"]
-title = "Captions: SRT, WebVTT, SCC, MCC, EBU STL, TTML/IMSC1, DFXP read/write"
-tier = "P0"
-reference = "yes"
-commands = ["captions.import", "captions.export"]
-
-[feature."caption-burn-in"]
-title = "Caption burn-in to picture"
-tier = "P1"
-reference = "yes"
-
-[feature."captions-608-708-embed"]
-title = "608/708 captions embedded in the video stream"
-tier = "P2"
-reference = "yes"
-
-[feature."speech-to-text"]
-title = "Speech-to-text transcription (local Whisper)"
-tier = "P1"
-reference = "yes"
-commands = ["transcript.generate", "transcript.createCaptions", "transcript.models"]
-
-[feature."text-to-speech-narration"]
-title = "Text-to-speech narration (Kokoro-82M)"
-tier = "P2"
-reference = "no"
-commands = ["tts.create", "tts.render", "tts.voices"]
-
 [feature."scene-edit-detection"]
 title = "Scene edit detection"
 tier = "P2"
 reference = "yes"
 commands = ["clip.sceneEditDetection"]
-
-[feature."ai-features-missing"]
-title = "Generative Extend and caption translation (AI)"
-tier = "P2"
-reference = "yes"
-
-[feature."export-h264"]
-title = "Export to H.264 (own software encoder)"
-tier = "P0"
-reference = "yes"
-commands = ["file.exportMedia", "export.quick"]
-
-[feature."export-h264-10bit-422"]
-title = "H.264 10-bit 4:2:2 encode (XAVC S-I class)"
-tier = "P2"
-reference = "yes"
-
-[feature."export-hevc"]
-title = "Export to HEVC"
-tier = "P0"
-reference = "yes"
-commands = ["file.exportMedia"]
-
-[feature."export-prores"]
-title = "Export to ProRes (422 family)"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportMedia"]
-
-[feature."export-dnxhr"]
-title = "Export to DNxHD / DNxHR (MOV + MXF)"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportMedia"]
-
-[feature."export-mxf"]
-title = "Export MXF OP1a / OP-Atom"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportMedia"]
-
-[feature."export-apv"]
-title = "Export to APV (RFC 9924)"
+[feature."text-to-speech-narration"]
+title = "Text-to-speech narration (Kokoro-82M)"
 tier = "P2"
 reference = "no"
-commands = ["file.exportMedia"]
-
-[feature."export-stills-and-sequences"]
-title = "Export stills and image sequences (PNG/TIFF/BMP/JPEG/Targa/DPX/EXR, GIF)"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportMedia", "file.exportFrame"]
-
-[feature."export-audio-files"]
-title = "Export WAV / AIFF / AAC / MP3 / FLAC audio"
-tier = "P0"
-reference = "yes"
-commands = ["file.exportMedia"]
-
-[feature."export-presets-queue"]
-title = "Export presets and render queue"
-tier = "P0"
-reference = "yes"
-commands = ["export.queue.add", "export.queue.start", "export.presets.list", "export.presets.import"]
-
-[feature."quick-export"]
-title = "Quick Export with default preset"
-tier = "P0"
-reference = "yes"
-commands = ["export.quick"]
-
-[feature."gpu-export-rendering"]
-title = "GPU export rendering"
-tier = "P1"
-reference = "yes"
-
-[feature."export-av1"]
-title = "Export to AV1"
-tier = "P2"
-reference = "yes"
-
-[feature."export-missing-delivery"]
-title = "Export MPEG-2 / DVD / Blu-ray, DCP, XDCAM HD / AS-10 / AS-11 / JPEG 2000 MXF, interlaced and smart render"
-tier = "P2"
-reference = "yes"
-
-[feature."project-save-open"]
-title = "Project save / open / Save As / Save a Copy (.fcproj, migrations)"
-tier = "P0"
-reference = "yes"
-commands = ["file.save", "file.open", "file.saveAs", "file.saveCopy"]
-
-[feature."autosave-recovery"]
-title = "Auto-save and crash recovery"
-tier = "P0"
-reference = "yes"
-commands = ["file.autoSaveNow", "file.recover", "file.listAutoSaves"]
-
-[feature."prproj-import"]
-title = "Open Premiere .prproj projects"
-tier = "P0"
-reference = "yes"
-
-[feature."final-cut-xml"]
-title = "FCP7 XML (xmeml) and FCPXML read/write"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportFcp7Xml", "file.exportFcpxml"]
-
-[feature."aaf-interchange"]
-title = "AAF (Edit Protocol) read/write"
-tier = "P1"
-reference = "yes"
-commands = ["file.importAaf", "file.exportAaf"]
-
-[feature."omf-export"]
-title = "OMF 2.0 export"
-tier = "P2"
-reference = "yes"
-commands = ["file.exportOmf"]
-
-[feature."edl-and-ale"]
-title = "EDL (CMX 3600) and ALE export"
-tier = "P2"
-reference = "yes"
-commands = ["file.exportEdl", "file.exportAle"]
-
-[feature."otio"]
-title = "OpenTimelineIO read/write"
-tier = "P1"
-reference = "yes"
-commands = ["file.exportOtio"]
-
-[feature."selection-as-project"]
-title = "Export selection as a project"
-tier = "P2"
-reference = "yes"
-commands = ["file.exportSelectionProject"]
-
-[feature."project-manager"]
-title = "Project Manager (consolidate / transcode / collect)"
-tier = "P2"
-reference = "yes"
-commands = ["file.projectManager"]
-
-[feature."ingest-settings-proxies"]
-title = "Ingest settings and proxy workflow"
-tier = "P1"
-reference = "yes"
-commands = ["project.ingestSettings", "media.createProxies", "media.toggleProxies"]
-
-[feature."relink-offline-media"]
-title = "Link Media / relink / find missing / make offline"
-tier = "P0"
-reference = "yes"
-commands = ["media.linkMedia", "media.relink", "media.autoRelink", "media.findMissing", "media.makeOffline"]
-
-[feature."import-mp4-mov"]
-title = "Import MP4 / MOV (H.264, HEVC 8-bit 4:2:0)"
-tier = "P0"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."h264-hevc-10bit-422-decode"]
-title = "H.264 High 10 / 4:2:2 and HEVC 4:2:2 software decode"
-tier = "P1"
-reference = "yes"
-
-[feature."import-mxf"]
-title = "Import MXF OP1a / OP-Atom (AVC, DNx, ProRes, MPEG-2, PCM)"
-tier = "P1"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."import-other-containers"]
-title = "Import Matroska/WebM, AVI (1.0/OpenDML), MPEG-TS/PS (AVCHD)"
-tier = "P1"
-reference = "partial"
-commands = ["file.import"]
-
-[feature."import-image-sequences"]
-title = "Import image sequences"
-tier = "P1"
-reference = "yes"
-commands = ["file.importImageSequence"]
-
-[feature."import-stills"]
-title = "Import stills (PNG/JPG/TIFF/BMP/TGA/DPX/EXR/HDR/WebP)"
-tier = "P1"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."psd-import"]
-title = "Import PSD (layers as sequence)"
-tier = "P2"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."heif-import"]
-title = "Import HEIF / HEIC"
-tier = "P2"
-reference = "yes"
-
-[feature."dng-cinemadng-import"]
-title = "Import CinemaDNG / DNG (Bayer raw)"
-tier = "P2"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."import-camera-raw-and-legacy"]
-title = "Import camera RAW (R3D, ARRIRAW, BRAW, Sony/Canon RAW, ProRes RAW) and WMV/DV/FLV/JPEG 2000/XS/MPEG-4 Part 2"
-tier = "P1"
-reference = "yes"
-
-[feature."import-audio-files"]
-title = "Import audio (WAV/BWF, AIFF, MP3/MP2, AAC, FLAC, Ogg, Opus, AC-3/E-AC-3)"
-tier = "P0"
-reference = "yes"
-commands = ["file.import"]
-
-[feature."media-browser"]
-title = "Media browser for camera folder structures"
-tier = "P2"
-reference = "yes"
-commands = ["mediaBrowser.navigate", "mediaBrowser.import", "mediaBrowser.openInSource"]
-
-[feature."audio-hardware-devices"]
-title = "Audio interfaces (CoreAudio, WASAPI, ALSA via cpal)"
-tier = "P0"
-reference = "yes"
-commands = ["audio.voiceover.settings"]
-
-[feature."program-monitor-guides"]
-title = "Program monitor guides, rulers, safe margins, transparency grid"
-tier = "P1"
-reference = "yes"
-
-[feature."transform-handles"]
-title = "On-screen transform handles in Program monitor"
-tier = "P1"
-reference = "yes"
-
-[feature."workspaces-docking"]
-title = "Workspaces, dock / undock / float panels"
-tier = "P1"
-reference = "yes"
-
-[feature."project-panel-views"]
-title = "Project panel list / icon / freeform views, hover scrub"
-tier = "P1"
-reference = "yes"
-commands = ["project.view.set", "project.freeform.layout", "project.columns.set"]
-
+commands = ["tts.create", "tts.render", "tts.voices"]
 [feature."timeline-display"]
 title = "Timeline display: thumbnails, waveforms, track heights, duplicate-frame markers"
 tier = "P1"
 reference = "yes"
 commands = ["sequence.duplicateFrames", "sequence.showDuplicateFrameMarkers"]
-
-[feature."keyboard-shortcuts"]
-title = "Keyboard shortcuts: Premiere-compatible preset + editor"
+[feature."timeline-snapping"]
+title = "Timeline snapping"
 tier = "P0"
 reference = "yes"
-commands = ["shortcuts.loadPreset", "shortcuts.set", "shortcuts.export", "shortcuts.import"]
-
-[feature."numeric-entry-and-drop"]
-title = "Scrubbable hot text, typed timecode, drag-and-drop of OS files"
-tier = "P1"
-reference = "yes"
-commands = ["timeline.place"]
-
-[feature."ui-chrome"]
-title = "Dark / light / system theme and context menus"
-tier = "P2"
-reference = "yes"
-
-[feature."screen-reader"]
-title = "Screen-reader accessibility"
-tier = "P2"
-reference = "yes"
-
-[feature."hardware-decode"]
-title = "Hardware decode (VideoToolbox, Media Foundation/D3D11, VA-API, NVDEC)"
+commands = ["sequence.snap"]
+[feature."transition-settings"]
+title = "Transition settings and on-timeline transition editing"
 tier = "P0"
 reference = "yes"
-
-[feature."hardware-encode"]
-title = "Hardware encode (VideoToolbox, NVENC)"
-tier = "P1"
-reference = "yes"
-
-[feature."zero-copy-upload"]
-title = "Zero-copy GPU upload of decoded frames"
-tier = "P2"
-reference = "yes"
-
-[feature."gpu-compositor"]
-title = "GPU compositing, blend modes, transforms"
+commands = ["sequence.setTransition", "sequence.removeTransition"]
+[feature."trim-ripple-edit"]
+title = "Trim ripple edit"
 tier = "P0"
 reference = "yes"
-
-[feature."external-io-and-surfaces"]
-title = "External video monitoring (DeckLink/AJA), control surfaces (EUCON, Mackie), LTC input"
-tier = "P2"
-reference = "yes"
-
-[feature."hdr-display"]
-title = "HDR / EDR display output"
-tier = "P2"
-reference = "yes"
-
-[feature."second-monitor-playback"]
-title = "Full-screen playback on a second computer monitor"
-tier = "P2"
-reference = "yes"
-
-[feature."spelling-check"]
-title = "Spelling check (Edit > Spelling) in titles and captions"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."sequence-index"]
-title = "Sequence Index"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."generate-reassociate-source-clips"]
-title = "Generate / Reassociate Source Clips"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."project-shortcut-and-refresh-projects"]
-title = "Project Shortcut and Refresh All Projects"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."plugin-hosting"]
-title = "Plugin hosting (VST3 / Audio Units, OpenFX, Premiere plug-in API, UXP panels)"
-tier = "P1"
-reference = "yes"
-commands = []
-
-[feature."c2pa-content-credentials"]
-title = "C2PA content credentials"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."localization-ui-languages"]
-title = "Localization: Premiere UI languages (de, es, fr, it, ja, ko, pt, ru, zh_CN)"
-tier = "P1"
-reference = "yes"
-commands = []
-
-[feature."collaboration-and-ai-models-settings"]
-title = "Collaboration and AI Models settings"
-tier = "P2"
-reference = "yes"
-commands = []
-
-[feature."media-intelligence-search-auto-colour"]
-title = "Media-intelligence search and auto colour"
-tier = "P2"
-reference = "yes"
-commands = []
+commands = ["trim.edit", "trim.toggleType"]
