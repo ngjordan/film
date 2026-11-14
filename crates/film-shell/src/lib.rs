@@ -14,6 +14,7 @@ mod appearance;
 mod audio;
 #[path = "../../../apps/filmcraft/src/audio_in.rs"]
 mod audio_in;
+#[cfg(not(target_arch = "wasm32"))]
 mod desktop;
 #[path = "../../../apps/filmcraft/src/file_filters.rs"]
 mod file_filters;
@@ -70,6 +71,9 @@ impl Shell {
         }
         session.voiceover.input = Some(Box::new(audio_in::CpalIn::new(&session.prefs.audio_hardware.device_class)));
         let mut app = FilmcraftApp::new(session);
+        // The desktop-only host services: the system clipboard and the
+        // filesystem. A browser tab has neither.
+        #[cfg(not(target_arch = "wasm32"))]
         desktop::install(&mut app);
         app.audio = Some(Box::new(audio::CpalOut::new()));
         let rate = app.session.active_sequence().map(|q| q.settings.sample_rate);

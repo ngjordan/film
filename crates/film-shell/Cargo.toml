@@ -20,10 +20,10 @@ serde_json.workspace = true
 log.workspace = true
 rfd.workspace = true
 cpal = "0.16"
-arboard = "3"
+
 chrono = { workspace = true, features = ["clock"] }
 sys-locale = "0.3"
-open = "5"
+
 
 [dev-dependencies]
 tempfile = "3"
@@ -37,3 +37,9 @@ muda = "0.21"
 objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSProcessInfo", "NSString", "NSArray"] }
 objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSApplication", "NSResponder", "NSWindow", "NSPanel", "NSColorPanel", "NSColor", "NSColorSpace"] }
 objc2 = "0.6"
+
+# The desktop clipboard. A browser tab has its own clipboard API and
+# arboard has no wasm32 backend.
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+open = "5"
+arboard = "3"

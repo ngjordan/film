@@ -34,6 +34,49 @@ fn patch_button(ui: &mut egui::Ui, button: PatchButton<'_>) -> egui::Response {
     resp
 }
 
+/// The track name on the lower line of a header, and the inline editor that
+/// replaces it while the name is being edited. Enter commits the name, Escape
+/// drops it, and losing the focus commits it too.
+///
+/// Nothing here can panic: every Option is matched before it is used.
+#[allow(clippy::too_many_arguments)]
+fn track_name(
+    app: &mut FilmcraftApp,
+    ui: &mut egui::Ui,
+    track: u64,
+    name: &str,
+    label: &str,
+    name_r: Rect,
+    visible: Rect,
+    named: bool,
+    t: &Tokens,
+    actions: &mut Vec<(String, serde_json::Value)>,
+) {
+    let renaming = named && matches!(&app.ui.timeline.rename_track, Some((id, _)) if *id == track);
+    if renaming {
+        let Some((_, text)) = app.ui.timeline.rename_track.as_mut() else {
+            return;
+        };
+        let e = ui.put(name_r.intersect(visible), egui::TextEdit::singleline(text).id(egui::Id::unique(("trackName", track))).font(Tokens::ui(11.0)));
+        let enter = ui.input(|i| i.key_pressed(egui::Key::Enter));
+        let esc = ui.input(|i| i.key_pressed(egui::Key::Escape));
+        if !(enter || esc || e.lost_focus()) {
+            e.request_focus();
+            return;
+        }
+        let Some((id, text)) = app.ui.timeline.rename_track.take() else {
+            return;
+        };
+        if !esc {
+            actions.push(("timeline.setTrack".into(), json!({"track": id, "name": text})));
+        }
+    } else if named {
+        let p = ui.painter();
+        p.text(pos2(name_r.min.x + 4.0, name_r.min.y + 8.0), Align2::LEFT_CENTER, name, Tokens::ui(11.0), t.text_dim);
+        app.auto.add(&format!("timeline.track.{label}.name"), name_r, "Rename track");
+    }
+}
+
 /// Draw only the visible track headers, including colour label, targeting, lock and header controls clipped to each row.
 #[allow(clippy::too_many_arguments)]
 pub(super) fn draw_headers(app: &mut FilmcraftApp, ui: &mut egui::Ui, seq: &Sequence, rows: &[Row], rect: Rect, vclip: Rect, aclip: Rect, t: &Tokens) {
@@ -164,24 +207,7 @@ pub(super) fn draw_headers(app: &mut FilmcraftApp, ui: &mut egui::Ui, seq: &Sequ
         // 5. name on the lower line (or inline when short)
         let name_r = Rect::from_min_max(pos2(hrect.min.x + 90.0, hrect.min.y + 26.0), pos2(hrect.max.x - 4.0, hrect.min.y + 42.0));
         let named = hrect.height() >= 40.0;
-        let renaming = named && matches!(&app.ui.timeline.rename_track, Some((id, _)) if *id == r.track.0);
-        if renaming {
-            let text = &mut app.ui.timeline.rename_track.as_mut().unwrap().1;
-            let e = ui.put(name_r.intersect(visible), egui::TextEdit::singleline(text).id(egui::Id::new(("trackName", r.track.0))).font(Tokens::ui(11.0)));
-            let enter = ui.input(|i| i.key_pressed(egui::Key::Enter));
-            let esc = ui.input(|i| i.key_pressed(egui::Key::Escape));
-            if !(enter || esc || e.lost_focus()) {
-                e.request_focus();
-            } else {
-                let (id, text) = app.ui.timeline.rename_track.take().unwrap();
-                if !esc {
-                    actions.push(("timeline.setTrack".into(), json!({"track": id, "name": text})));
-                }
-            }
-        } else if named {
-            p.text(pos2(hrect.min.x + 94.0, hrect.min.y + 34.0), Align2::LEFT_CENTER, &tr.name, Tokens::ui(11.0), t.text_dim);
-            app.auto.add(&format!("timeline.track.{label}.name"), name_r, "Rename track");
-        }
+        track_name(app, ui, r.track.0, &tr.name, &label, name_r, visible, named, t, &mut actions);
         // resize track height by dragging the header's bottom edge, or the outer edge of the top video
         // track or the last audio track, which also reaches into the empty space past it
         let header_column = Rect::from_min_max(pos2(hrect.min.x, clip_rect.min.y), pos2(hrect.max.x, clip_rect.max.y));
