@@ -215,6 +215,9 @@ pub struct TimelineView {
     /// (`volume`, `pan`, `mute`, `send.<i>.level`, `fx.<slot>.<param>`).
     #[serde(default)]
     pub track_lanes: std::collections::BTreeMap<u64, String>,
+    /// Track header rename in progress: track id and the text typed so far.
+    #[serde(skip)]
+    pub rename_track: Option<(u64, String)>,
 }
 
 impl TimelineView {
@@ -247,6 +250,7 @@ impl Default for TimelineView {
             seen_playhead: None,
             fit_empty: None,
             track_lanes: Default::default(),
+            rename_track: None,
         }
     }
 }

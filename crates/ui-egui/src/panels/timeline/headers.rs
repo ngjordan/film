@@ -162,8 +162,25 @@ pub(super) fn draw_headers(app: &mut FilmcraftApp, ui: &mut egui::Ui, seq: &Sequ
         // 4. upper line icons
         header_line_buttons(app, ui, seq, r, tr, visible, hrect, &label, t, &mut actions, &mut vo_action);
         // 5. name on the lower line (or inline when short)
-        if hrect.height() >= 40.0 {
+        let name_r = Rect::from_min_max(pos2(hrect.min.x + 90.0, hrect.min.y + 26.0), pos2(hrect.max.x - 4.0, hrect.min.y + 42.0));
+        let named = hrect.height() >= 40.0;
+        let renaming = named && matches!(&app.ui.timeline.rename_track, Some((id, _)) if *id == r.track.0);
+        if renaming {
+            let text = &mut app.ui.timeline.rename_track.as_mut().unwrap().1;
+            let e = ui.put(name_r.intersect(visible), egui::TextEdit::singleline(text).id(egui::Id::new(("trackName", r.track.0))).font(Tokens::ui(11.0)));
+            let enter = ui.input(|i| i.key_pressed(egui::Key::Enter));
+            let esc = ui.input(|i| i.key_pressed(egui::Key::Escape));
+            if !(enter || esc || e.lost_focus()) {
+                e.request_focus();
+            } else {
+                let (id, text) = app.ui.timeline.rename_track.take().unwrap();
+                if !esc {
+                    actions.push(("timeline.setTrack".into(), json!({"track": id, "name": text})));
+                }
+            }
+        } else if named {
             p.text(pos2(hrect.min.x + 94.0, hrect.min.y + 34.0), Align2::LEFT_CENTER, &tr.name, Tokens::ui(11.0), t.text_dim);
+            app.auto.add(&format!("timeline.track.{label}.name"), name_r, "Rename track");
         }
         // resize track height by dragging the header's bottom edge, or the outer edge of the top video
         // track or the last audio track, which also reaches into the empty space past it
@@ -192,7 +209,9 @@ pub(super) fn draw_headers(app: &mut FilmcraftApp, ui: &mut egui::Ui, seq: &Sequ
             egui::Id::unique(("hdr", r.track.0)),
             Sense::click(),
         );
-        if resp.double_clicked() {
+        if resp.double_clicked() && named && ui.input(|i| i.pointer.latest_pos()).is_some_and(|q| name_r.contains(q)) {
+            app.ui.timeline.rename_track = Some((r.track.0, tr.name.clone()));
+        } else if resp.double_clicked() {
             let h = if r.kind == TrackKind::Video { &mut app.ui.timeline.video_track_h } else { &mut app.ui.timeline.audio_track_h };
             *h = if *h < 50.0 { 64.0 } else { 30.0 };
         }
