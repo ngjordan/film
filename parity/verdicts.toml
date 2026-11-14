@@ -453,9 +453,9 @@ note = "MJPEG from still cameras."
 title = "Camera RAW: RED R3D, ARRIRAW, BRAW, Sony/Canon RAW, ProRes RAW"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/codec-parity.md:35"]
+evidence = ["crates/media/src/lib.rs:267", "crates/media/src/lib.rs:269"]
 commands = []
-note = "RAW media with a RAW settings panel for exposure/temperature. Missing: Complete miss across RED/ARRI/Blackmagic/Sony/Canon/Apple RAW (docs/codec-parity.md:35)."
+note = "RAW media with a RAW settings panel for exposure/temperature. Missing: Complete miss across RED/ARRI/Blackmagic/Sony/Canon/Apple RAW (docs/codec-parity.md:35). The import extension lists at crates/media/src/lib.rs:267-271 hold only dng among camera RAW formats, with no r3d, ari, braw or other RAW extension."
 
 [verdict."dng-decode"]
 title = "CinemaDNG / DNG decode"
@@ -469,17 +469,17 @@ note = "CinemaDNG raw sequences. Missing: Own decoder, but no lossy DNG or JXL c
 title = "WMV/ASF, DV/DVCPRO, FLV, MPEG-4 Part 2 import"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/codec-parity.md:30", "docs/file-format-parity.md:44"]
+evidence = ["crates/codecs/src/avi.rs:56", "crates/media/src/lib.rs:269"]
 commands = []
-note = "Legacy Windows and web formats. Missing: WMV/ASF, DV and FLV/MPEG-4 Part 2 have no decoders (docs/codec-parity.md:30-33)."
+note = "Legacy Windows and web formats. Missing: WMV/ASF, DV and FLV/MPEG-4 Part 2 have no decoders (docs/codec-parity.md:30-33). AVI FourCC mapping at crates/codecs/src/avi.rs:56-59 tags MPEG-4 Part 2 and DV as VCodec::Unsupported, and the import extension list at crates/media/src/lib.rs:269-271 has no wmv, asf or flv."
 
 [verdict."jpeg2000-xs"]
 title = "JPEG 2000 and JPEG XS decode"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/codec-parity.md:28"]
+evidence = ["crates/codecs/src/mxf.rs:301"]
 commands = []
-note = "J2K in MXF and JPEG XS streams. Missing: Both missing (docs/codec-parity.md:28-29)."
+note = "J2K in MXF and JPEG XS streams. Missing: Both missing (docs/codec-parity.md:28-29). The MXF track loop at crates/codecs/src/mxf.rs:301-305 sends every codec other than VC-3, ProRes, AVC and MPEG-2 (so JPEG 2000) to an unsupported branch with no decoder, and no JPEG XS handling exists in crates/codecs."
 
 [verdict."uncompressed-video"]
 title = "Uncompressed / v210 / RGB video"
@@ -517,9 +517,9 @@ note = "Import layered PSD as flattened composite. Missing: Flattened composite 
 title = "HEIF/HEIC import"
 verdict = "ABSENT"
 level = "wired"
-evidence = ["docs/file-format-parity.md:61"]
+evidence = ["crates/media/src/lib.rs:267"]
 commands = []
-note = "iPhone HEIC stills. Missing: Missing (docs/file-format-parity.md:61, #1063)."
+note = "iPhone HEIC stills. Missing: Missing (docs/file-format-parity.md:61, #1063). The still-image extension list at crates/media/src/lib.rs:267 has no heic or heif entry, so is_importable rejects those files."
 
 [verdict."image-sequence"]
 title = "Image sequence import (numbered frames as one clip)"
@@ -869,9 +869,9 @@ note = "Robust project files: atomic write, version migration, crash recovery."
 title = "Open Premiere .prproj projects"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/gaps.md:55"]
+evidence = ["crates/engine/src/media_browser.rs:81", "crates/engine/src/interchange.rs:12"]
 commands = []
-note = "Read .prproj files directly. Missing: G2: no .prproj importer (docs/gaps.md:55-57); grep across crates/ finds no prproj handling."
+note = "Read .prproj files directly. Missing: G2: no .prproj importer (docs/gaps.md:55-57); grep across crates/ finds no prproj handling. The project-import extension lists at crates/engine/src/media_browser.rs:81 and crates/engine/src/interchange.rs:12 contain no prproj."
 
 [verdict."fcp7-xml"]
 title = "FCP7 XML (xmeml) import and export"
@@ -941,17 +941,17 @@ note = "Timed saves and post-crash project recovery."
 title = "Plug-in hosting and external hardware: VST3, Audio Units, OpenFX, UXP, DeckLink, AJA, EUCON"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/gaps.md:216", "docs/hardware-parity.md:70"]
+evidence = ["crates/engine/src/settings/schema.rs:546"]
 commands = []
-note = "Host VST3/AU/OFX plug-ins, UXP panels, EUCON consoles and broadcast I/O hardware. Missing: G11: no plug-in host API (docs/gaps.md:216-226); no control surfaces or video I/O (docs/hardware-parity.md:70)."
+note = "Host VST3/AU/OFX plug-ins, UXP panels, EUCON consoles and broadcast I/O hardware. Missing: G11: no plug-in host API (docs/gaps.md:216-226); no control surfaces or video I/O (docs/hardware-parity.md:70). The Plugins settings page at crates/engine/src/settings/schema.rs:543-547 only shows the note 'No plugins are installed', and no plug-in loader or external hardware I/O code exists in crates/."
 
 [verdict."generative-ai"]
 title = "Generative Extend and media-intelligence search"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/gaps.md:229"]
+evidence = ["crates/engine/src/commands.rs:91"]
 commands = []
-note = "AI-generated frames to extend a shot; search footage by content. Missing: G12: Premiere 26 AI features are a listed real miss (docs/gaps.md:229-235)."
+note = "AI-generated frames to extend a shot; search footage by content. Missing: G12: Premiere 26 AI features are a listed real miss (docs/gaps.md:229-235). The command spec table built by command_specs() at crates/engine/src/commands.rs:91 has no generative extend or AI search command."
 
 [verdict."adobe-cloud"]
 title = "Team Projects, Productions and Adobe cloud collaboration"
