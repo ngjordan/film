@@ -699,11 +699,11 @@ note = "Clips show a strip of thumbnails instead of one still. Missing: Listed m
 
 [verdict."track-rename"]
 title = "Track renaming in the timeline"
-verdict = "PARTIAL"
+verdict = "REAL"
 level = "read"
-evidence = ["crates/engine/src/commands.rs:3617", "docs/ui-parity.md:26"]
+evidence = ["crates/ui-egui/src/panels/timeline/headers.rs:238", "crates/ui-egui/src/panels/timeline/headers.rs:76"]
 commands = ["timeline.setTrack"]
-note = "Double-click a track header to rename it. Missing: Engine rename exists; the timeline UI rename affordance is missing (docs/ui-parity.md:26, #654)."
+note = "Double-click a track header's name to rename it in place; Enter commits through timeline.setTrack with the name and Escape cancels (headers.rs:238, headers.rs:76). A double-click elsewhere on the header still toggles the track height."
 
 [verdict."appearance-accessibility"]
 title = "Appearance modes, screen-reader accessibility, per-panel context menus"
@@ -990,7 +990,7 @@ verdict = "PARTIAL"
 level = "wired"
 evidence = ["crates/engine/src/sequence_tools.rs:122", "crates/engine/src/sequence_tools.rs:118", "docs/ui-parity.md:26"]
 commands = ["sequence.duplicateFrames", "sequence.showDuplicateFrameMarkers"]
-note = "No continuous filmstrip thumbnails (#614), no track rename (#654)."
+note = "No continuous filmstrip thumbnails (#614). The track rename exists (headers.rs:238); what is still missing is the list/keyframe synchronisation the row also asks for."
 
 [verdict."timeline-snapping"]
 title = "Timeline snapping"
