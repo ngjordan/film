@@ -341,9 +341,9 @@ note = "Reframe a sequence for a different aspect ratio tracking the action. Mis
 title = "Object Mask (AI masking, Premiere 26.0)"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/gaps.md:229", "crates/engine/src/masks.rs:37"]
+evidence = ["crates/engine/src/masks.rs:209", "crates/engine/src/masks.rs:95"]
 commands = ["masks.add"]
-note = "AI-select a subject and mask it. Missing: Premiere 26.0's AI Object Mask is a listed real miss (docs/gaps.md G12); masks.rs covers manual masks only."
+note = "AI-select a subject and mask it. Missing: Premiere 26.0's AI Object Mask is a listed real miss (docs/gaps.md G12); masks.rs covers manual masks only. masks.add builds a MaskPath from shape parameters (ellipse, polygon, rectangle) and there is no model, no segmentation and no AI selection anywhere in the module"
 
 [verdict."mask-tools"]
 title = "Bezier masks with tracking, feather and rounded corners"
@@ -589,9 +589,9 @@ note = "Reconnect moved media; replace footage."
 title = "Camera metadata (XDCAM/P2 sidecars, Sony start timecode)"
 verdict = "ABSENT"
 level = "wired"
-evidence = ["docs/target-app-parity.md:114", "docs/file-format-parity.md:49"]
+evidence = ["crates/engine/src/panels.rs:283", "crates/engine/src/panels.rs:206"]
 commands = ["metadata.get"]
-note = "Read camera and reel metadata from sidecars and streams. Missing: Camera metadata sidecars and the Sony start timecode (issue #460) are absent."
+note = "Read camera and reel metadata from sidecars and streams. Missing: Camera metadata sidecars and the Sony start timecode (issue #460) are absent. metadata_get returns the clip's own name, fields and metadata map, and the only timecode it reads is the media's own start_timecode, so there is no camera sidecar reader and no Sony start timecode"
 
 [verdict."media-cache"]
 title = "Media cache management"
@@ -853,9 +853,9 @@ note = "Save export settings as presets; queue many sequences/ranges."
 title = "Delivery targets: AV1, MPEG-2/DVD/Blu-ray, DCP, XDCAM HD/IMX, AS-10/AS-11, interlaced"
 verdict = "ABSENT"
 level = "read"
-evidence = ["docs/gaps.md:237", "docs/target-app-parity.md:119"]
+evidence = ["crates/platform/src/lib.rs:72", "crates/platform/src/lib.rs:100"]
 commands = ["file.exportMedia"]
-note = "Premiere's broadcast and disc delivery encoders. Missing: Whole delivery class absent (docs/gaps.md:239-242, G13): no AV1/MPEG-2/XDCAM/DCP/AS-10/AS-11 output, no interlaced encoding or smart render."
+note = "Premiere's broadcast and disc delivery encoders. Missing: Whole delivery class absent (docs/gaps.md:239-242, G13): no AV1/MPEG-2/XDCAM/DCP/AS-10/AS-11 output, no interlaced encoding or smart render. the only encoder factories that are registered are NVENC on Windows and VideoToolbox on macOS, so there is no AV1, MPEG-2, XDCAM, DCP, AS-10 or AS-11 encoder and no interlaced encoding to drive them"
 
 [verdict."fcproj"]
 title = "Native project format: atomic saves, migrations, auto-save, recovery"
