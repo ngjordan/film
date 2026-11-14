@@ -688,3 +688,56 @@ title = "Full-screen playback on a second computer monitor"
 tier = "P2"
 reference = "yes"
 
+[feature."spelling-check"]
+title = "Spelling check (Edit > Spelling) in titles and captions"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."sequence-index"]
+title = "Sequence Index"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."generate-reassociate-source-clips"]
+title = "Generate / Reassociate Source Clips"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."project-shortcut-and-refresh-projects"]
+title = "Project Shortcut and Refresh All Projects"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."plugin-hosting"]
+title = "Plugin hosting (VST3 / Audio Units, OpenFX, Premiere plug-in API, UXP panels)"
+tier = "P1"
+reference = "yes"
+commands = []
+
+[feature."c2pa-content-credentials"]
+title = "C2PA content credentials"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."localization-ui-languages"]
+title = "Localization: Premiere UI languages (de, es, fr, it, ja, ko, pt, ru, zh_CN)"
+tier = "P1"
+reference = "yes"
+commands = []
+
+[feature."collaboration-and-ai-models-settings"]
+title = "Collaboration and AI Models settings"
+tier = "P2"
+reference = "yes"
+commands = []
+
+[feature."media-intelligence-search-auto-colour"]
+title = "Media-intelligence search and auto colour"
+tier = "P2"
+reference = "yes"
+commands = []

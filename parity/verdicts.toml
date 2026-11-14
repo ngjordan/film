@@ -91,10 +91,10 @@ commands = ["sequence.lift", "sequence.extract"]
 [verdict."undo-history"]
 title = "Undo / redo and History panel"
 verdict = "REAL"
-level = "wired"
-evidence = ["crates/engine/src/commands.rs:2113", "crates/engine/src/commands.rs:2114"]
+level = "read"
+evidence = ["crates/engine/src/commands.rs:2113"]
 commands = ["edit.undo", "edit.redo", "history.list", "history.clear"]
-note = "Snapshot undo for every journaled command (TP:256)."
+note = "edit.undo/edit.redo closures call Session::undo/redo; history.clear/deleteRedoable closures act on s.history (commands.rs:2113-2117); history.list body not read"
 
 [verdict."edit-clipboard"]
 title = "Cut / copy / paste, paste insert, paste media"
@@ -142,9 +142,10 @@ commands = ["sequence.snap"]
 [verdict."clip-link-groups"]
 title = "Linked audio/video editing and clip groups"
 verdict = "REAL"
-level = "wired"
-evidence = ["crates/engine/src/commands.rs:2506", "crates/engine/src/commands.rs:2817"]
+level = "read"
+evidence = ["crates/engine/src/commands.rs:2506"]
 commands = ["clip.link", "sequence.linkedSelection", "clip.group", "clip.ungroup"]
+note = "clip.link body read (toggles Link/Unlink on selection via edit_sequence, commands.rs:2506); clip.group/ungroup and linkedSelection not read"
 
 [verdict."track-management"]
 title = "Track management (targeting, lock/hide, add, delete)"
@@ -163,9 +164,10 @@ note = "Open issue #483."
 [verdict."work-area-and-match-frame"]
 title = "Work area bar and match frame"
 verdict = "REAL"
-level = "wired"
-evidence = ["crates/engine/src/commands.rs:2951", "crates/engine/src/commands.rs:2999"]
+level = "read"
+evidence = ["crates/engine/src/commands.rs:2951"]
 commands = ["sequence.workAreaBar", "sequence.matchFrame", "sequence.reverseMatchFrame"]
+note = "sequence.workAreaBar body read (show/hide the work area, commands.rs:2951); matchFrame/reverseMatchFrame not read"
 
 [verdict."clip-utilities"]
 title = "Clip utilities: enable, labels, rename, interpret footage, subclips, replace, consolidate, find"
@@ -215,10 +217,10 @@ note = "Rows, keyframes, value/velocity graphs and eyedropper (#518) exist; keyf
 [verdict."transition-settings"]
 title = "Transition settings and on-timeline transition editing"
 verdict = "PARTIAL"
-level = "wired"
-evidence = ["crates/engine/src/commands.rs:2780", "crates/engine/src/commands.rs:2788", "docs/ui-parity.md:27"]
+level = "read"
+evidence = ["crates/engine/src/commands.rs:5039"]
 commands = ["sequence.setTransition", "sequence.removeTransition"]
-note = "Drag/select/resize works (#503); drag-to-slide/resize is buggy (#577); no A/B preview with Start/End sliders."
+note = "sequence.setTransition body read (commands.rs:5039): needs transition id, applies settings; no A/B Start/End preview"
 
 [verdict."effect-presets-prfpset"]
 title = "Premiere .prfpset effect preset import"
@@ -266,9 +268,9 @@ commands = ["masks.add", "masks.track", "masks.addVertex"]
 [verdict."gpu-accelerated-effects"]
 title = "GPU-accelerated effects (~82 of ~92 in Premiere)"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["crates/render/src/gpufx.rs:225", "docs/hardware-parity.md:55"]
-note = "GPU_EFFECTS lists 35 effect ids (colour, levels, blurs incl. Bokeh, sharpen, crop, transform, flips, vignette, video limiter, ASC CDL, channel mix, Color Grading basic/creative/vignette)."
+note = "GPU_EFFECTS list read (render/src/gpufx.rs:225): fixed list of GPU-capable effect ids, fewer than Premiere's ~82"
 
 [verdict."adjustment-layers"]
 title = "Adjustment layers"
@@ -288,9 +290,9 @@ commands = ["sequence.renderInToOut", "sequence.renderEffectsInToOut", "sequence
 [verdict."render-and-replace"]
 title = "Render and Replace / Restore Unrendered"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/target-app-parity.md:44"]
-note = "Named as a menu miss."
+note = "docs/target-app-parity.md:43-44 lists \"Render and Replace / Restore Unrendered\" under Real misses; no matching command id in the row"
 
 [verdict."audio-mixer"]
 title = "Audio Track Mixer (strips, inserts, sends, submixes)"
@@ -311,24 +313,26 @@ note = "set_kf writes track keyframes with hold lanes and first-keyframe value c
 [verdict."essential-sound-and-ducking"]
 title = "Essential Sound (types, presets, auto-match) and auto-ducking"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/essential_sound.rs:155", "crates/engine/src/essential_sound.rs:203"]
 commands = ["essentialSound.setType", "essentialSound.applyPreset", "essentialSound.autoMatch", "essentialSound.generateDucking"]
+note = "essentialSound.setType body read (essential_sound.rs:154: sets EssentialSound::new(type) on targets); applyPreset/autoMatch/generateDucking not read"
 
 [verdict."remix-audio"]
 title = "Remix (music retiming)"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/remix.rs:221", "crates/engine/src/remix.rs:276"]
 commands = ["clip.remix", "clip.remix.properties"]
+note = "clip.remix handler read in part (remix.rs:219-225): needs target duration/segments/variations, else error; retiming algorithm not read"
 
 [verdict."voice-over-record"]
 title = "Voice-over record (punch-in)"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/voiceover.rs:277", "crates/engine/src/voiceover.rs:449", "docs/hardware-parity.md:69"]
 commands = ["audio.voiceover.start", "audio.voiceover.stop", "audio.voiceover.sync"]
-note = "Punch-in exists; macOS privacy declaration still missing (#659)."
+note = "audio.voiceover.start resolves record-armed audio track (voiceover.rs:275-281); recording/stop/sync bodies not read; macOS privacy declaration missing (#659)"
 
 [verdict."enhance-speech"]
 title = "Enhance Speech"
@@ -354,9 +358,9 @@ note = "AudioChannels::Surround51 with 5.1 pucks on strips feeding a 5.1 bus."
 [verdict."audio-missing-features"]
 title = "Auto-Tag Audio Types; Audio Clip / Track Effect Editor panels"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/target-app-parity.md:44"]
-note = "Named as menu misses."
+note = "docs/target-app-parity.md:44-47 lists Auto-Tag Audio Types and Audio Clip/Track Effect Editor under Real misses"
 
 [verdict."color-grading-and-looks"]
 title = "Color Grading (wheels, curves, HSL secondary, vignette) and Looks"
@@ -392,9 +396,9 @@ note = "HDR export exists; HDR-aware grading maths, macOS EDR display and D-Log 
 [verdict."gpu-color-grading"]
 title = "Color grading wheels / curves / HSL on the GPU"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["docs/hardware-parity.md:56"]
-note = "GPU covers basic, creative and vignette only; curves, wheels, HSL secondary are CPU."
+note = "docs/hardware-parity.md:56 table row: curves/wheels/HSL secondary run on CPU (GPU column 0%) (doc table line read; no code opened)"
 
 [verdict."text-titles"]
 title = "Text and titles engine (shaping, bidi, char styles)"
@@ -415,9 +419,10 @@ note = "Shape constructors with position/size/sides params dispatch to new_shape
 [verdict."rolls-crawls"]
 title = "Rolling and crawling titles"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/graphic_templates.rs:629"]
 commands = ["graphics.setRoll"]
+note = "graphics.setRoll body read (graphic_templates.rs:628: target graphic clip, roll mode from off/roll/crawl names)"
 
 [verdict."motion-graphics-templates"]
 title = "Motion Graphics templates (.mogrt)"
@@ -453,9 +458,9 @@ note = "ExportSettings.burn_captions renders captions into the picture; ffmpeg-o
 [verdict."captions-608-708-embed"]
 title = "608/708 captions embedded in the video stream"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/file-format-parity.md:82"]
-note = "Neither read nor write."
+note = "docs/file-format-parity.md:82 table row: 608/708 embedded in video stream, read no, write no, 0% (doc table line read; no code opened)"
 
 [verdict."speech-to-text"]
 title = "Speech-to-text transcription (local Whisper)"
@@ -483,9 +488,9 @@ commands = ["clip.sceneEditDetection"]
 [verdict."ai-features-missing"]
 title = "Generative Extend and caption translation (AI)"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/target-app-parity.md:169"]
-note = "Listed under missing AI features."
+note = "docs/target-app-parity.md:168-169 lists Generative Extend and caption translation under Missing (doc table line read; no code opened)"
 
 [verdict."export-h264"]
 title = "Export to H.264 (own software encoder)"
@@ -614,17 +619,17 @@ note = "autoSaveNow drives the persistence layer; status/browsing commands expos
 [verdict."prproj-import"]
 title = "Open Premiere .prproj projects"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/file-format-parity.md:16"]
-note = "The main beta blocker (G2): neither read nor written; FCP7 XML / AAF / OTIO exports are read instead."
+note = "docs/file-format-parity.md:16 table row: .prproj read no, write no, 0% (doc table line read; no code opened)"
 
 [verdict."final-cut-xml"]
 title = "FCP7 XML (xmeml) and FCPXML read/write"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/commands.rs:1945", "crates/engine/src/commands.rs:1950", "docs/file-format-parity.md:18", "docs/file-format-parity.md:19"]
 commands = ["file.exportFcp7Xml", "file.exportFcpxml"]
-note = "Round-trip tested; Premiere-exported XML import is slow (#461, 97 s)."
+note = "file.exportFcp7Xml closure read (commands.rs:1945): sets format=xml and calls interchange::export; FCPXML export and import side not opened"
 
 [verdict."aaf-interchange"]
 title = "AAF (Edit Protocol) read/write"
@@ -637,24 +642,26 @@ note = "Own CFB, embedded/linked/consolidated write; never validated in Media Co
 [verdict."omf-export"]
 title = "OMF 2.0 export"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/aaf_omf.rs:442", "docs/file-format-parity.md:21"]
 commands = ["file.exportOmf"]
-note = "Write-only like Premiere; never opened in Pro Tools."
+note = "export_omf body start read (aaf_omf.rs:441: needs path, builds plan_from sequence); writer not read"
 
 [verdict."edl-and-ale"]
 title = "EDL (CMX 3600) and ALE export"
 verdict = "REAL"
-level = "wired"
-evidence = ["crates/engine/src/commands.rs:1940", "crates/engine/src/project_tools.rs:134", "docs/file-format-parity.md:22", "docs/file-format-parity.md:24"]
+level = "read"
+evidence = ["crates/engine/src/commands.rs:1940"]
 commands = ["file.exportEdl", "file.exportAle"]
+note = "file.exportEdl closure read (commands.rs:1940): sets format=edl and calls interchange::export; interchange::export and the ALE path not opened"
 
 [verdict."otio"]
 title = "OpenTimelineIO read/write"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/commands.rs:1955", "docs/file-format-parity.md:23"]
 commands = ["file.exportOtio"]
+note = "file.exportOtio closure read (commands.rs:1955): sets format=otio and calls interchange::export; interchange::export not opened; import side not read"
 
 [verdict."selection-as-project"]
 title = "Export selection as a project"
@@ -667,10 +674,10 @@ note = "Writes .fcproj only; Premiere writes its own project format."
 [verdict."project-manager"]
 title = "Project Manager (consolidate / transcode / collect)"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/project_manager.rs:84", "docs/target-app-parity.md:121"]
 commands = ["file.projectManager"]
-note = "Exists; Media Manager has limits (#411)."
+note = "file.projectManager run() read (project_manager.rs:83): needs destination, mode collect or consolidate/transcode, dryRun supported; Media Manager limits not read"
 
 [verdict."ingest-settings-proxies"]
 title = "Ingest settings and proxy workflow"
@@ -721,9 +728,10 @@ note = "All common codecs demux (VP8 WebM via #1064, AVI via #650); MKV multi-au
 [verdict."import-image-sequences"]
 title = "Import image sequences"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/project_tools.rs:117"]
 commands = ["file.importImageSequence"]
+note = "file.importImageSequence closure read (project_tools.rs:117): requires path, forwards to import with imageSequence=true; the import body not opened"
 
 [verdict."import-stills"]
 title = "Import stills (PNG/JPG/TIFF/BMP/TGA/DPX/EXR/HDR/WebP)"
@@ -744,8 +752,9 @@ note = "Flattened composite only (Merge All Layers), 8/16-bit gray/RGB, merged t
 [verdict."heif-import"]
 title = "Import HEIF / HEIC"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/file-format-parity.md:61"]
+note = "docs/file-format-parity.md:61 row: HEIF/HEIC read no, 0% (doc table line read; no code opened)"
 
 [verdict."dng-cinemadng-import"]
 title = "Import CinemaDNG / DNG (Bayer raw)"
@@ -773,10 +782,10 @@ note = "Own decoders for most incl. E-AC-3 (#647, 5.1 core only) and MP1/MP2 (#8
 [verdict."media-browser"]
 title = "Media browser for camera folder structures"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/media_browser.rs:322", "crates/engine/src/media_browser.rs:531", "docs/file-format-parity.md:49"]
 commands = ["mediaBrowser.navigate", "mediaBrowser.import", "mediaBrowser.openInSource"]
-note = "Navigates and imports AVCHD files; spanned clips and camera metadata missing."
+note = "mediaBrowser.navigate go() read (media_browser.rs:320: directory must be listable, keeps back history); import/openInSource not read"
 
 [verdict."audio-hardware-devices"]
 title = "Audio interfaces (CoreAudio, WASAPI, ALSA via cpal)"
@@ -810,10 +819,10 @@ note = "11 workspaces vs Premiere's 17; window rearrangement (#493) and multi-mo
 [verdict."project-panel-views"]
 title = "Project panel list / icon / freeform views, hover scrub"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/project_panel.rs:921", "crates/engine/src/project_panel.rs:1260", "docs/ui-parity.md:25"]
 commands = ["project.view.set", "project.freeform.layout", "project.columns.set"]
-note = "All three views + hover scrub + view presets; no marquee select (#578), freeform bins (#579), Windows bin exit (#587)."
+note = "project.view.set body read (project_panel.rs:919-924: list/icon/freeform mode, icon size clamp 48-400); freeform layout/columns not read"
 
 [verdict."timeline-display"]
 title = "Timeline display: thumbnails, waveforms, track heights, duplicate-frame markers"
@@ -826,10 +835,10 @@ note = "No continuous filmstrip thumbnails (#614), no track rename (#654)."
 [verdict."keyboard-shortcuts"]
 title = "Keyboard shortcuts: Premiere-compatible preset + editor"
 verdict = "REAL"
-level = "wired"
+level = "read"
 evidence = ["crates/engine/src/shortcuts.rs:1244", "crates/engine/src/shortcuts.rs:1201", "docs/ui-parity.md:20"]
 commands = ["shortcuts.loadPreset", "shortcuts.set", "shortcuts.export", "shortcuts.import"]
-note = "143 keyboard-only commands in the Premiere preset (39 cloud keys skipped with reasons); FilmCraft/FCP/Avid presets."
+note = "shortcuts.loadPreset body read (shortcuts.rs:1244: loads named preset); set/export/import not read"
 
 [verdict."numeric-entry-and-drop"]
 title = "Scrubbable hot text, typed timecode, drag-and-drop of OS files"
@@ -870,9 +879,9 @@ note = "VideoToolbox H.264 8-bit (no B-frames) + HEVC 8-bit; NVENC H.264 8-bit e
 [verdict."zero-copy-upload"]
 title = "Zero-copy GPU upload of decoded frames"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/hardware-parity.md:33"]
-note = "Every decoded picture is read back to CPU and re-uploaded to wgpu."
+note = "docs/hardware-parity.md:32-33 states decoded pictures are read back to CPU and re-uploaded, no zero-copy (doc table line read; no code opened)"
 
 [verdict."gpu-compositor"]
 title = "GPU compositing, blend modes, transforms"
@@ -884,21 +893,21 @@ note = "wgpu (Metal, D3D12, Vulkan); the CPU compositor is the oracle."
 [verdict."external-io-and-surfaces"]
 title = "External video monitoring (DeckLink/AJA), control surfaces (EUCON, Mackie), LTC input"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/hardware-parity.md:70", "docs/hardware-parity.md:73", "docs/hardware-parity.md:74"]
-note = "All absent; they need hardware the project does not own (TP:353)."
+note = "docs/hardware-parity.md:70,73 rows: external monitoring and control surfaces no, 0% (doc table line read; no code opened)"
 
 [verdict."hdr-display"]
 title = "HDR / EDR display output"
 verdict = "ABSENT"
-level = "wired"
+level = "read"
 evidence = ["docs/hardware-parity.md:72"]
-note = "HDR sequences display as SDR."
+note = "docs/hardware-parity.md:72 row: HDR/EDR display no, 0% (doc table line read; no code opened)"
 
 [verdict."second-monitor-playback"]
 title = "Full-screen playback on a second computer monitor"
 verdict = "PARTIAL"
-level = "wired"
+level = "read"
 evidence = ["docs/hardware-parity.md:71"]
-note = "Full screen inside the app window only (#466)."
+note = "docs/hardware-parity.md:71 row: full screen inside the app window only, no separate-display output (doc table line read; no code opened)"
 
