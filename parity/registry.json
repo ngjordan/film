@@ -3,9 +3,8 @@
  "source": "fc-filmcraft/crates/engine/src",
  "scan": "source",
  "complete": false,
- "count": 695,
+ "count": 693,
  "ids": [
-  "a.mp4",
   "allLines",
   "appearanceMode",
   "audio.toggleScrubbing",
@@ -547,7 +546,6 @@
   "prores_lt_half",
   "prores_proxy_half",
   "prores_proxy_quarter",
-  "render.wav",
   "samplesDecoded",
   "samplesSkipped",
   "scaleToFrameSize",
