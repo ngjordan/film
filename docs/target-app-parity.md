@@ -14,7 +14,7 @@ The deep checklists are [file-format-parity.md](file-format-parity.md),
 
 | | Value | Kind |
 |---|---|---|
-| **Feature breadth** | **~86%** | Partly measured: menus 92% (label diff, below), effects / transitions / audio effects 100% (unit tests); the other areas are estimated |
+| **Feature breadth** |**[parity/parity.md](../parity/parity.md)**| Partly measured: menus 92% (label diff, below), effects / transitions / audio effects 100% (unit tests); the other areas are estimated |
 | **Ready for real work** | **~56%** (range 51–61%) | Estimated depth per area, combined with written weights ([formula](#three-readiness-numbers)) |
 | **Mainstream practitioner** | **~55%** | Weekly editing areas only, with written discounts ([method](#mainstream-practitioner)) |
 | **Essentials user** | **~60%** | Core features at default settings, with written discounts ([method](#essentials-user)) |
