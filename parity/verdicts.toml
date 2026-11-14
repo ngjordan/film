@@ -683,19 +683,19 @@ note = "Drag motion/scale/rotation/corner-pin handles on the monitor."
 
 [verdict."multi-monitor"]
 title = "Second-display full-screen playback / floating monitor windows"
-verdict = "ABSENT"
-level = "wired"
-evidence = ["docs/hardware-parity.md:71"]
+verdict = "PARTIAL"
+level = "read"
+evidence = ["crates/ui-egui/src/dock_ui.rs:535", "crates/ui-egui/src/panels/monitor.rs:222"]
 commands = []
-note = "Send the program video to a second display. Missing: No separate-display output (docs/hardware-parity.md:71, #466)."
+note = "The video viewers float as normal OS windows, so they can be dragged to a second display (dock_ui.rs:535, window_kind gives Program, Source, ReferenceMonitor and LumetriScopes WindowKind::Normal), and the Program monitor has a full-screen mode (monitor.rs:222). Missing: there is no separate-display output that sends the program video to display 2 by itself."
 
 [verdict."filmstrip"]
 title = "Continuous filmstrip clip thumbnails"
-verdict = "ABSENT"
+verdict = "REAL"
 level = "read"
-evidence = ["docs/ui-parity.md:26"]
+evidence = ["crates/ui-egui/src/state.rs:267", "crates/ui-egui/src/panels/timeline.rs:1116"]
 commands = []
-note = "Clips show a strip of thumbnails instead of one still. Missing: Listed missing in docs/ui-parity.md:26; grep across crates/ and docs/ finds only that mention."
+note = "ThumbnailMode::Continuous (state.rs:267) is 'Frames side by side across the whole clip', the timeline tiles it across the clip (timeline.rs:1116), and ui.set with timeline.thumbnails continuous queues them (state.rs:271, control.rs:276). The earlier note said a grep found only the gap document: that was wrong."
 
 [verdict."track-rename"]
 title = "Track renaming in the timeline"
