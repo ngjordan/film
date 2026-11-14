@@ -336,20 +336,13 @@ fn playback_at_a_newer_revision_keeps_the_frame_being_rendered() {
     let d = Driver::demo();
     let app = d.harness.state();
     let idle = || {
-        if std::env::var_os("LLVM_PROFILE_FILE").is_some() {
-            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(60);
-            while app.frames.queue_len() != 0 {
-                assert!(std::time::Instant::now() < deadline, "the frame queue never emptied ({} queued)", app.frames.queue_len());
-                std::thread::sleep(std::time::Duration::from_millis(1));
-            }
-        } else {
-            for _ in 0..200_000 {
-                if app.frames.queue_len() == 0 {
-                    return;
-                }
-                std::thread::sleep(std::time::Duration::from_micros(50));
-            }
-            panic!("the frame queue never emptied ({} queued)", app.frames.queue_len());
+        // Wait on a deadline, not on a count of sleeps. The workers need real
+        // CPU, and a busy machine (a parallel build, a loaded CI runner) takes
+        // longer than any fixed number of iterations allows.
+        let deadline = std::time::Instant::now() + std::time::Duration::from_secs(60);
+        while app.frames.queue_len() != 0 {
+            assert!(std::time::Instant::now() < deadline, "the frame queue never emptied ({} queued)", app.frames.queue_len());
+            std::thread::sleep(std::time::Duration::from_millis(1));
         }
     };
     // the clip with Color Grading at full resolution: tens of milliseconds on the CPU
