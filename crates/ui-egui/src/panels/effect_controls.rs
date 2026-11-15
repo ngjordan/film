@@ -1021,9 +1021,10 @@ pub fn lumetri_panel(app: &mut FilmcraftApp, ui: &mut egui::Ui, rect: Rect) {
     let mut bui = ui.new_child(egui::UiBuilder::new().max_rect(rect.shrink(6.0)).id_salt("lumetri"));
     bui.label(egui::RichText::new(tlf!("Master · {name}", name = it.name)).color(t.text_dim));
     let Some(idx) = idx else {
-        if bui.button(tl!("Add Color Grading to clip")).clicked() {
-            let _ = app.session.execute("effects.apply", json!({"clips": [clip.0], "effect": "lumetri"}));
-        }
+        if bui.button(tl!("Add Color Grading to clip")).clicked()
+            && let Err(e) = app.session.execute("effects.apply", json!({"clips": [clip.0], "effect": "lumetri"})) {
+                app.ui.status = e.to_string();
+            }
         return;
     };
     let e = it.effects[idx].clone();

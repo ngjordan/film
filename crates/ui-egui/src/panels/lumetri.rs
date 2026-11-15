@@ -40,9 +40,10 @@ pub fn show(app: &mut FilmcraftApp, ui: &mut egui::Ui, rect: Rect) {
         bui.add_space(8.0);
         bui.label(egui::RichText::new(tlf!("Master · {name}", name = it.name)).color(t.text_dim));
         bui.add_space(8.0);
-        if bui.button(tl!("Add Color Grading to clip")).clicked() {
-            let _ = app.session.execute("effects.apply", json!({"clips": [clip.0], "effect": "lumetri"}));
-        }
+        if bui.button(tl!("Add Color Grading to clip")).clicked()
+            && let Err(e) = app.session.execute("effects.apply", json!({"clips": [clip.0], "effect": "lumetri"})) {
+                app.ui.status = e.to_string();
+            }
         return;
     };
     let e = it.effects[idx].clone();
@@ -57,9 +58,10 @@ pub fn show(app: &mut FilmcraftApp, ui: &mut egui::Ui, rect: Rect) {
     bui.horizontal(|ui| {
         ui.with_layout(egui::Layout::right_to_left(egui::Align::Center), |ui| {
             let fx = ui.add(egui::Button::new(egui::RichText::new("fx").italics().color(if e.enabled { t.text } else { t.text_faint })).frame(false));
-            if fx.clicked() {
-                let _ = app.session.execute("effects.toggleEnabled", json!({"clip": clip.0, "index": idx}));
-            }
+            if fx.clicked()
+                && let Err(e) = app.session.execute("effects.toggleEnabled", json!({"clip": clip.0, "index": idx})) {
+                    app.ui.status = e.to_string();
+                }
             ui.with_layout(egui::Layout::left_to_right(egui::Align::Center), |ui| {
                 ui.add(egui::Label::new(egui::RichText::new(tlf!("Master · {name}", name = it.name)).color(t.text_dim)).truncate());
             });

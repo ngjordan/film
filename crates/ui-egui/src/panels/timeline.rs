@@ -837,9 +837,10 @@ fn empty_state(app: &mut FilmcraftApp, ui: &mut egui::Ui, rect: Rect) {
     app.auto.add("timeline.openDemo", b, "Open Demo Project");
     ui.painter().rect_filled(b, 13.0, if resp.hovered() { t.accent_hover } else { t.accent });
     ui.painter().text(b.center(), Align2::CENTER_CENTER, tl!("Open Demo Project"), Tokens::semibold(12.0), Color32::WHITE);
-    if resp.clicked() {
-        let _ = app.session.execute("file.openDemoProject", json!({}));
-    }
+    if resp.clicked()
+        && let Err(e) = app.session.execute("file.openDemoProject", json!({})) {
+            app.ui.status = e.to_string();
+        }
     // accept drops from the project panel
     if let Some(item) = crate::panels::dragged_project_item(ui)
         && ui.rect_contains_pointer(rect)

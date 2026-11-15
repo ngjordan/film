@@ -399,9 +399,10 @@ pub fn grid(app: &mut FilmcraftApp, ui: &mut egui::Ui, area: Rect) {
             ui.painter().rect_filled(r, 3.0, if resp.hovered() && enabled { t.hover } else { t.field_bg });
             ui.painter().text(r.center(), Align2::CENTER_CENTER, label, Tokens::ui(10.0), if enabled { t.text } else { t.text_faint });
             app.auto.add(&format!("program.multicam.{id}"), r, label);
-            if resp.clicked() && enabled {
-                let _ = app.session.execute(cmd, json!({}));
-            }
+            if resp.clicked() && enabled
+                && let Err(e) = app.session.execute(cmd, json!({})) {
+                    app.ui.status = e.to_string();
+                }
         }
     }
     // record indicator

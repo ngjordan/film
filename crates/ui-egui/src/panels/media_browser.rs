@@ -459,7 +459,9 @@ fn entry_interactions(app: &mut FilmcraftApp, ui: &egui::Ui, resp: &egui::Respon
             }
         }
         if ui.button(tl!("Reveal in Finder")).clicked() {
-            let _ = crate::panels::menu_dialogs::open_path(app, &ctx, &e.path, true);
+            if let Err(err) = crate::panels::menu_dialogs::open_path(app, &ctx, &e.path, true) {
+                app.ui.status = err;
+            }
             ui.close();
         }
     });
@@ -809,19 +811,22 @@ pub fn panel_menu(app: &mut FilmcraftApp, ui: &mut egui::Ui) -> bool {
         exec(app, &ctx, "mediaBrowser.settings", json!({"hoverScrub": !prefs.hover_scrub}));
         close = true;
     }
-    item(app, ui, "newPanel", tl!("New Media Browser Panel"), false, None, "");
     let mprefs = app.session.prefs.media.clone();
     if item(app, ui, "createFolderForImportedProjects", tl!("Create Folder For Imported Projects"), true, Some(mprefs.create_folder_for_imported_projects), "")
     {
         let mut p = app.session.prefs.clone();
         p.media.create_folder_for_imported_projects = !mprefs.create_folder_for_imported_projects;
-        let _ = app.session.set_prefs(p);
+        if let Err(e) = app.session.set_prefs(p) {
+            app.ui.status = e.to_string();
+        }
         close = true;
     }
     if item(app, ui, "allowDuplicateMedia", tl!("Allow Duplicate Media During Project Import"), true, Some(mprefs.allow_duplicate_media), "") {
         let mut p = app.session.prefs.clone();
         p.media.allow_duplicate_media = !mprefs.allow_duplicate_media;
-        let _ = app.session.set_prefs(p);
+        if let Err(e) = app.session.set_prefs(p) {
+            app.ui.status = e.to_string();
+        }
         close = true;
     }
     if item(app, ui, "refresh", tl!("Refresh"), true, None, "") {

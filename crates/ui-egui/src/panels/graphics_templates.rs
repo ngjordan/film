@@ -297,9 +297,10 @@ fn browse(app: &mut FilmcraftApp, ui: &mut egui::Ui, rect: Rect) {
     for (id, r, l) in elems {
         app.auto.add(&id, r, &l);
     }
-    if install {
-        let _ = route(app, &ctx, "graphics.template.install", &json!({}));
-    }
+    if install
+        && let Some(Err(e)) = route(app, &ctx, "graphics.template.install", &json!({})) {
+            app.ui.status = e;
+        }
     for (cmd, p) in actions {
         match app.session.execute(&cmd, p) {
             Ok(v) => {
